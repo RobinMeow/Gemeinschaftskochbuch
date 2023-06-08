@@ -26,3 +26,14 @@ Not part of set-up, but my preference:
 
 ## package-lock.json 
 the top level file was created by ng new, for whatever reason .. (Ill check if it is used somewhere, than Ill delete it most likely)
+
+## Development 
+
+API: 
+1. navigate to your root directory. 'Gemeinschaftskochbuch'
+2. Start local web server: 'dotnet run --project .\api\' 
+
+UI: 
+1. navigate to your ui directory. 'Gemeinschaftskochbuch/ui'
+2. Start Locale Dev Server for angular `ng serve` 
+> apprently there is more than one way to pass a path to ng serve, but it seemed to change often, so I didnt bother reading into it, as it is likely to change again. 
