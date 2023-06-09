@@ -16,4 +16,8 @@ export class AddRezeptComponent {
   protected rezeptForm: FormGroup = new FormGroup({
     name: new FormControl()
   });
+
+  protected onAdd(): void {
+    console.log(this.rezeptForm.value);
+  }
 }

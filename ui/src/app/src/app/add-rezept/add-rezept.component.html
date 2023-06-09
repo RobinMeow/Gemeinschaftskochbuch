@@ -1,5 +1,5 @@
 <h1>Rezept erstellen</h1>
-<form [formGroup]="rezeptForm">
+<form [formGroup]="rezeptForm" (ngSubmit)="onAdd()">
     <input type="text" placeholder="Name" formControlName="name">
     <br>
     <button>Erstellen</button>
