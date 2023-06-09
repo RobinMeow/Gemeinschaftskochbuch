@@ -1,6 +1,6 @@
 <h1>Rezept erstellen</h1>
-<form>
-    <input type="text" placeholder="Name">
+<form [formGroup]="rezeptForm">
+    <input type="text" placeholder="Name" formControlName="name">
     <br>
     <button>Erstellen</button>
 </form>
