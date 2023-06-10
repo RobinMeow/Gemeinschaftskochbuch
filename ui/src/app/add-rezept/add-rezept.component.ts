@@ -1,20 +1,16 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { Observable, catchError } from 'rxjs';
+import { catchError } from 'rxjs';
 import { HandleError, HttpErrorHandler } from 'src/app/http-error-handler.service';
 import { MessageService } from 'src/app/message.service';
 import { Rezept } from './Rezept';
+import { RezeptService } from '../rezept.service';
 
-const httpOptions = {
-  headers: new HttpHeaders({
-    'Content-Type':  'application/json',
-    // Authorization: 'my-auth-token'
-  })
-};
+
 
 @Component({
   selector: 'app-add-rezept',
@@ -37,7 +33,6 @@ export class AddRezeptComponent {
   // not marked as static, because I want to access them from the template
   protected readonly NAME_MIN_LENGTH: number = 3;
   protected readonly NAME_MAX_LENGTH: number = 100;
-  private _handleError: HandleError; // https://angular.io/guide/http#sending-data-to-a-server
 
   protected rezeptForm: FormGroup;
 
@@ -45,8 +40,7 @@ export class AddRezeptComponent {
 
   constructor(
     fromBuilder: FormBuilder,
-    private _httpClient: HttpClient,
-    httpErrorHandler: HttpErrorHandler,
+    private _rezeptService: RezeptService,
     protected messageService: MessageService
     ) {
       this.rezeptForm = fromBuilder.group({
@@ -64,7 +58,6 @@ export class AddRezeptComponent {
     // This shows how to make a dynamic form for the Zutaten, which can be any number, so the html should be generated based on it..
     // https://youtu.be/JeeUY6WaXiA?t=355
 
-    this._handleError = httpErrorHandler.createHandleError('AddRezeptComponent');
   }
 
   protected onAdd(): void {
@@ -74,16 +67,10 @@ export class AddRezeptComponent {
       name: this.name.value,
     } as Rezept;
 
-    const addRezept$ = this.addRezept(rezept);
+    const addRezept$ = this._rezeptService.addRezept(rezept);
     addRezept$.subscribe((_: Rezept) => {
       // do nothing with the newly recieved rezept (contains backend generated data)
     });
   }
 
-  private addRezept(rezept: Rezept): Observable<Rezept> {
-    return this._httpClient.post<Rezept>('http://localhost:5263' + '/Rezept/Add', rezept, httpOptions)
-      .pipe(
-        catchError(this._handleError('addRezept', rezept))
-      );
-  }
 }
