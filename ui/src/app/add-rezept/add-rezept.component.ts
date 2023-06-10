@@ -4,11 +4,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { MessageService } from 'src/app/message.service';
+import { MessageService } from '../message.service';
 import { Rezept } from './Rezept';
 import { RezeptService } from '../rezept.service';
-
-
 
 @Component({
   selector: 'app-add-rezept',
@@ -35,8 +33,7 @@ export class AddRezeptComponent {
 
   constructor(
     fromBuilder: FormBuilder,
-    private _rezeptService: RezeptService,
-    protected messageService: MessageService
+    private _rezeptService: RezeptService
     ) {
       this.rezeptForm = fromBuilder.group({
         name: ['', [ // default value, than array of validators (you can pass in a second array for async validators. I should check it out)

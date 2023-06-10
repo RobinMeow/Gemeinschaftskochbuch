@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { AddRezeptComponent } from './add-rezept.component';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 describe('AddRezeptComponent', () => {
   let component: AddRezeptComponent;
@@ -8,9 +8,14 @@ describe('AddRezeptComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ AddRezeptComponent ]
+      imports: [
+        AddRezeptComponent,
+      ],
+      providers: [
+        provideAnimations()
+      ]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(AddRezeptComponent);
     component = fixture.componentInstance;
