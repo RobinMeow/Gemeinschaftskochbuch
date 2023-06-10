@@ -13,10 +13,14 @@
     </mat-form-field>
 
     <br>
-    
-    <button mat-button color="accent" type="button">Erstellen</button>
 
-    <br>
-    <br>
-    {{ rezeptForm.value | json }}
+    <button mat-raised-button type="submit" color="primary" [disabled]="rezeptForm.invalid">Erstellen</button>
 </form>
+
+<br>
+<br>
+{{ rezeptForm.value | json }}
+
+<br>
+
+<ng-container *ngFor="let msg of messageService.messages">{{ msg }}</ng-container>

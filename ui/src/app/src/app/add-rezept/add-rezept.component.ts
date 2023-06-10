@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { Observable, catchError } from 'rxjs';
 import { HandleError, HttpErrorHandler } from 'src/app/http-error-handler.service';
+import { MessageService } from 'src/app/message.service';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -21,7 +22,12 @@ const httpOptions = {
     CommonModule,
     ReactiveFormsModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    HttpClientModule
+  ],
+  providers: [
+    MessageService, // we need the message service first
+    HttpErrorHandler
   ],
   templateUrl: './add-rezept.component.html',
   styleUrls: ['./add-rezept.component.scss']
@@ -39,27 +45,29 @@ export class AddRezeptComponent {
   constructor(
     fromBuilder: FormBuilder,
     private _httpClient: HttpClient,
-    httpErrorHandler: HttpErrorHandler
+    httpErrorHandler: HttpErrorHandler,
+    protected messageService: MessageService
     ) {
     this.rezeptForm = fromBuilder.group({
       name: ['', [ // default value, than array of validators (you can pass in a second array for async validators. I should check it out)
         Validators.required,
         Validators.minLength(this.NAME_MIN_LENGTH),
         Validators.maxLength(this.NAME_MAX_LENGTH)
-      ]] 
+      ]]
     });
 
     // use for auto completion and stuff
-    // this.rezeptForm.valueChanges.subscribe(); 
+    // this.rezeptForm.valueChanges.subscribe();
     this.rezeptForm.valueChanges.subscribe(() => console.log(this.rezeptForm.value));
 
     // This shows how to make a dynamic form for the Zutaten, which can be any number, so the html should be generated based on it..
     // https://youtu.be/JeeUY6WaXiA?t=355
 
-    this._handleError = httpErrorHandler.createHandleError('HeroesService');
+    this._handleError = httpErrorHandler.createHandleError('AddRezeptComponent');
   }
 
   protected onAdd(): void {
+    console.log('onAdd raised!');
     console.log(this.rezeptForm.value);
 
     if (!this.nameIsValid()) return;
@@ -68,7 +76,8 @@ export class AddRezeptComponent {
       name: this.name.value
     };
 
-    this.addRezept(rezept);
+    const example = this.addRezept(rezept);
+    example.subscribe((rezept: Rezept) => console.log('Added: ' + rezept.name)); // this is raised even tho it fails ... humm...
   }
 
   private nameIsValid(): boolean {
@@ -82,7 +91,9 @@ export class AddRezeptComponent {
   }
 
   addRezept(rezept: Rezept): Observable<Rezept> {
-    return this._httpClient.post<Rezept>('http://localhost:5263' + '/Rezepte/Add', rezept, httpOptions)
+    const body = rezept;
+    console.log('addRezept raised!');
+    return this._httpClient.post<Rezept>('http://localhost:5263' + '/Rezepte/Add', body, httpOptions)
     .pipe(
       catchError(this._handleError('addRezept', rezept))
     );
