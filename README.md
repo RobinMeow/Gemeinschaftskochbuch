@@ -41,6 +41,7 @@ UI:
 ## Debug
 In order to debug, launch.json and task.json had to be created at root level for the Run and Debug VSCode extension tab to work.
 Mostly, it simply redirects to the tasks wihtin api and ui.
+I opened the api folder in its own vscode window, to get the pop up which asks to generate launch and tasks files. (you can also go to the debug tab and press create files, but this will also only work, when api is your root folder in the workspace).
 
 # Custom Tasks
 There is one Task, you can execute, which starts `ng serve` and `dotnet run` in separate terminals.

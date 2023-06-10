@@ -3,6 +3,7 @@
   // for the documentation about the tasks.json format
   "version": "2.0.0",
   "tasks": [
+    // ui
     {
       "label": "RUN FrontEnd",
       "type": "shell",
@@ -30,59 +31,105 @@
       },
     },
     {
-      "label":"Run Back + Front End",
-      "dependsOn":[
-         "RUN FrontEnd",
-         "RUN BackEnd"
+      "label": "Run Back + Front End",
+      "dependsOn": [
+        "RUN FrontEnd",
+        "RUN BackEnd"
       ],
-      "presentation":{
-         "reveal":"always",
-         "revealProblems":"never",
-         "panel":"new"
+      "presentation": {
+        "reveal": "always",
+        "revealProblems": "never",
+        "panel": "new"
       },
       "problemMatcher": [] // will prevent the scanning pop up, after trying to execute it
-   },
-   {
-    "type": "npm",
-    "script": "start",
-    "isBackground": true,
-    "problemMatcher": {
-      "owner": "typescript",
-      "pattern": "$tsc",
-      "background": {
-        "activeOnStart": true,
-        "beginsPattern": {
-          "regexp": "(.*?)"
-        },
-        "endsPattern": {
-          "regexp": "bundle generation complete"
+    },
+    {
+      "type": "npm",
+      "script": "start",
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "typescript",
+        "pattern": "$tsc",
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": {
+            "regexp": "(.*?)"
+          },
+          "endsPattern": {
+            "regexp": "bundle generation complete"
+          }
         }
+      },
+      "options": {
+        "cwd": "./ui/"
       }
     },
-    "options": {
-      "cwd": "./ui/"
-    }
-  },
-  {
-    "type": "npm",
-    "script": "test",
-    "isBackground": true,
-    "problemMatcher": {
-      "owner": "typescript",
-      "pattern": "$tsc",
-      "background": {
-        "activeOnStart": true,
-        "beginsPattern": {
-          "regexp": "(.*?)"
-        },
-        "endsPattern": {
-          "regexp": "bundle generation complete"
+    {
+      "type": "npm",
+      "script": "test",
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "typescript",
+        "pattern": "$tsc",
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": {
+            "regexp": "(.*?)"
+          },
+          "endsPattern": {
+            "regexp": "bundle generation complete"
+          }
         }
+      },
+      "options": {
+        "cwd": "./ui/"
       }
     },
-    "options": {
-      "cwd": "./ui/"
+    // api
+    {
+      "label": "build",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "${workspaceFolder}/api/api.csproj",
+        "/property:GenerateFullPaths=true",
+        "/consoleloggerparameters:NoSummary"
+      ],
+      "problemMatcher": "$msCompile",
+      "options": {
+        "cwd": "./api/"
+      }
+    },
+    {
+      "label": "publish",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "publish",
+        "${workspaceFolder}/api/api.csproj",
+        "/property:GenerateFullPaths=true",
+        "/consoleloggerparameters:NoSummary"
+      ],
+      "problemMatcher": "$msCompile",
+      "options": {
+        "cwd": "./api/"
+      }
+    },
+    {
+      "label": "watch",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "watch",
+        "run",
+        "--project",
+        "${workspaceFolder}/api/api.csproj"
+      ],
+      "problemMatcher": "$msCompile",
+      "options": {
+        "cwd": "./api/"
+      }
     }
-  }
   ]
 }
