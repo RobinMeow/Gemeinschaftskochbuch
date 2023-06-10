@@ -5,7 +5,7 @@
   "tasks": [
     // ui
     {
-      "label": "RUN FrontEnd",
+      "label": "Front-End (Angular)",
       "type": "shell",
       "hide": true,
       "command": "ng serve",
@@ -18,7 +18,7 @@
       }
     },
     {
-      "label": "RUN BackEnd",
+      "label": "Back-End (dotnet webapi)",
       "type": "shell",
       "hide": true,
       "command": "dotnet run",
@@ -33,8 +33,8 @@
     {
       "label": "Run Back + Front End",
       "dependsOn": [
-        "RUN FrontEnd",
-        "RUN BackEnd"
+        "Front-End (Angular)",
+        "Back-End (dotnet webapi)"
       ],
       "presentation": {
         "reveal": "always",
