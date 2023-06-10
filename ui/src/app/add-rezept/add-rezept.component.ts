@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { Observable, catchError } from 'rxjs';
 import { HandleError, HttpErrorHandler } from 'src/app/http-error-handler.service';
 import { MessageService } from 'src/app/message.service';
+import { Rezept } from './Rezept';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -35,7 +36,7 @@ const httpOptions = {
 export class AddRezeptComponent {
   // not marked as static, because I want to access them from the template
   protected readonly NAME_MIN_LENGTH: number = 3;
-  protected readonly NAME_MAX_LENGTH: number = 50;
+  protected readonly NAME_MAX_LENGTH: number = 100;
   private _handleError: HandleError; // https://angular.io/guide/http#sending-data-to-a-server
 
   protected rezeptForm: FormGroup;
@@ -68,16 +69,15 @@ export class AddRezeptComponent {
 
   protected onAdd(): void {
     console.log('onAdd raised!');
-    console.log(this.rezeptForm.value);
 
     if (!this.nameIsValid()) return;
 
     const rezept: Rezept = {
-      name: this.name.value
-    };
+      name: this.name.value,
+    } as Rezept;
 
-    const example = this.addRezept(rezept);
-    example.subscribe((rezept: Rezept) => console.log('Added: ' + rezept.name)); // this is raised even tho it fails ... humm...
+    const addRezept$ = this.addRezept(rezept);
+    addRezept$.subscribe((rezept: Rezept) => console.log(rezept));
   }
 
   private nameIsValid(): boolean {
@@ -93,15 +93,9 @@ export class AddRezeptComponent {
   addRezept(rezept: Rezept): Observable<Rezept> {
     const body = rezept;
     console.log('addRezept raised!');
-    return this._httpClient.post<Rezept>('http://localhost:5263' + '/Rezepte/Add', body, httpOptions)
+    return this._httpClient.post<Rezept>('http://localhost:5263' + '/Rezept/Add', body, httpOptions)
     .pipe(
       catchError(this._handleError('addRezept', rezept))
     );
   }
 }
-
-interface Rezept {
-  name: string;
-}
-
-// Idea: On the Zutaten. Whener ever a Zutat-name is supplied, (the first character to be excat) it should automatically raise "add Zutat" button. On Submit it needs to filter out the last one, if it is empty ..
