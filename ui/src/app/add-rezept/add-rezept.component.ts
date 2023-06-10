@@ -49,12 +49,12 @@ export class AddRezeptComponent {
     httpErrorHandler: HttpErrorHandler,
     protected messageService: MessageService
     ) {
-    this.rezeptForm = fromBuilder.group({
-      name: ['', [ // default value, than array of validators (you can pass in a second array for async validators. I should check it out)
-        Validators.required,
-        Validators.minLength(this.NAME_MIN_LENGTH),
-        Validators.maxLength(this.NAME_MAX_LENGTH)
-      ]]
+      this.rezeptForm = fromBuilder.group({
+        name: ['', [ // default value, than array of validators (you can pass in a second array for async validators. I should check it out)
+          Validators.required,
+          Validators.minLength(this.NAME_MIN_LENGTH),
+          Validators.maxLength(this.NAME_MAX_LENGTH)
+        ]]
     });
 
     // ToDo: use for auto completion and stuff
@@ -68,34 +68,22 @@ export class AddRezeptComponent {
   }
 
   protected onAdd(): void {
-    console.log('onAdd raised!');
-
-    if (!this.nameIsValid()) return;
+    if (!this.rezeptForm.valid) return;
 
     const rezept: Rezept = {
       name: this.name.value,
     } as Rezept;
 
     const addRezept$ = this.addRezept(rezept);
-    addRezept$.subscribe((rezept: Rezept) => console.log(rezept));
+    addRezept$.subscribe((_: Rezept) => {
+      // do nothing with the newly recieved rezept (contains backend generated data)
+    });
   }
 
-  private nameIsValid(): boolean {
-    const nameValue: string = this.name.value;
-
-    if (nameValue.length < this.NAME_MIN_LENGTH) return false;
-    if (nameValue.length > this.NAME_MAX_LENGTH) return false;
-    if (nameValue.length == 0) return false;
-
-    return true;
-  }
-
-  addRezept(rezept: Rezept): Observable<Rezept> {
-    const body = rezept;
-    console.log('addRezept raised!');
-    return this._httpClient.post<Rezept>('http://localhost:5263' + '/Rezept/Add', body, httpOptions)
-    .pipe(
-      catchError(this._handleError('addRezept', rezept))
-    );
+  private addRezept(rezept: Rezept): Observable<Rezept> {
+    return this._httpClient.post<Rezept>('http://localhost:5263' + '/Rezept/Add', rezept, httpOptions)
+      .pipe(
+        catchError(this._handleError('addRezept', rezept))
+      );
   }
 }
