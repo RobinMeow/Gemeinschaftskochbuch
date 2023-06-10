@@ -57,7 +57,7 @@ export class AddRezeptComponent {
       ]]
     });
 
-    // use for auto completion and stuff
+    // ToDo: use for auto completion and stuff
     // this.rezeptForm.valueChanges.subscribe();
     this.rezeptForm.valueChanges.subscribe(() => console.log(this.rezeptForm.value));
 
