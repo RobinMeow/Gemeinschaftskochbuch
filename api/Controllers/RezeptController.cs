@@ -8,7 +8,7 @@ namespace api.Controllers;
 
 [ApiController]
 [Route("Rezepte")]
-public class RezeptController : ControllerBase
+public sealed class RezeptController : ControllerBase
 {
     readonly ILogger<RezeptController> _logger;
     readonly RezeptRepository _rezeptRepository;
@@ -19,10 +19,17 @@ public class RezeptController : ControllerBase
         _rezeptRepository = new RezeptRepository();
     }
 
-    [HttpGet(Name = "GetAll")]
+    [HttpGet(Name = nameof(GetAll))]
     public IEnumerable<RezeptDto> GetAll()
     {
         IEnumerable<Rezept> rezepte = _rezeptRepository.GetAll();
         return rezepte.ToDto();
+    }
+
+    [HttpPost(Name = nameof(Add))]
+    public void Add(RezeptDto rezeptDto)
+    {
+        Rezept rezept = Rezept.Create(rezeptDto);
+        _rezeptRepository.Add(rezept);
     }
 }
