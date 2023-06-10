@@ -4,6 +4,8 @@ import { Observable, catchError } from 'rxjs';
 import { Rezept } from './add-rezept/Rezept';
 import { HandleError, HttpErrorHandler } from './http-error-handler.service';
 
+const API: string = 'http://localhost:5263/Rezept/';
+
 const httpOptions = {
   headers: new HttpHeaders({
     'Content-Type':  'application/json',
@@ -24,10 +26,19 @@ export class RezeptService {
     this._handleError = httpErrorHandler.createHandleError('RezeptService');
    }
 
-  addRezept(rezept: Rezept): Observable<Rezept> {
-    return this._httpClient.post<Rezept>('http://localhost:5263' + '/Rezept/Add', rezept, httpOptions)
+  add(rezept: Rezept): Observable<Rezept> {
+    const functionName: string = 'Add';
+    return this._httpClient.post<Rezept>(API + functionName, rezept, httpOptions)
       .pipe(
-        catchError(this._handleError('addRezept', rezept))
+        catchError(this._handleError(functionName, rezept))
+      );
+  }
+
+  getAll(): Observable<Rezept[]> {
+    const functionName: string = 'GetAll';
+    return this._httpClient.get<Rezept[]>(API + functionName)
+      .pipe(
+        catchError(this._handleError(functionName, []))
       );
   }
 }

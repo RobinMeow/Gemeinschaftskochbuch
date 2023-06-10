@@ -11,7 +11,6 @@ namespace api.Controllers;
 [Route("[controller]")]
 public sealed class RezeptController : GkbController
 {
-    const string ERROR_MESSAGE_PREFIX = "In " + nameof(RezeptController) + " On ";
     readonly ILogger<RezeptController> _logger;
     readonly RezeptRepository _rezeptRepository;
 
