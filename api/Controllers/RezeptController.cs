@@ -9,8 +9,9 @@ namespace api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public sealed class RezeptController : ControllerBase
+public sealed class RezeptController : GkbController
 {
+    const string ERROR_MESSAGE_PREFIX = "In " + nameof(RezeptController) + " On ";
     readonly ILogger<RezeptController> _logger;
     readonly RezeptRepository _rezeptRepository;
 
@@ -18,20 +19,6 @@ public sealed class RezeptController : ControllerBase
     {
         _logger = logger;
         _rezeptRepository = new RezeptRepository();
-    }
-
-    [HttpGet(nameof(GetAll))]
-    public IEnumerable<RezeptDto> GetAll()
-    {
-        try
-        {
-            IEnumerable<Rezept> rezepte = _rezeptRepository.GetAll();
-            return rezepte.ToDto();
-        }
-        catch (Exception ex)
-        {
-            throw;
-        }
     }
 
     [HttpPost(nameof(Add))]
@@ -48,7 +35,23 @@ public sealed class RezeptController : ControllerBase
         }
         catch (Exception ex)
         {
-            throw; // ToDo: Read About Asp.NET Core Logging. I know there is alot of stuff prebuilt.
+            _logger.LogError(ex, "OnRezeptAdd");
+            return Status_500_Internal_Server_Error;
+        }
+    }
+
+    [HttpGet(nameof(GetAll))]
+    public IActionResult GetAll()
+    {
+        try
+        {
+            IEnumerable<Rezept> rezepte = _rezeptRepository.GetAll();
+            return Ok(rezepte.ToDto());
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, GetErrorMessage(nameof(RezeptController), nameof(GetAll)));
+            return Status_500_Internal_Server_Error;
         }
     }
 }
