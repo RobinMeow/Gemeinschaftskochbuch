@@ -1,13 +1,14 @@
 using System.Collections.Generic;
 using api.Domain;
 using api.Infrastructure;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace api.Controllers;
 
 [ApiController]
-[Route("Rezepte")]
+[Route("[controller]")]
 public sealed class RezeptController : ControllerBase
 {
     readonly ILogger<RezeptController> _logger;
@@ -19,17 +20,21 @@ public sealed class RezeptController : ControllerBase
         _rezeptRepository = new RezeptRepository();
     }
 
-    [HttpGet(Name = nameof(GetAll))]
+    [HttpGet(nameof(GetAll))]
     public IEnumerable<RezeptDto> GetAll()
     {
         IEnumerable<Rezept> rezepte = _rezeptRepository.GetAll();
         return rezepte.ToDto();
     }
 
-    [HttpPost(Name = nameof(Add))]
-    public void Add(RezeptDto rezeptDto)
+    [HttpPost(nameof(Add))]
+    public ActionResult<RezeptDto> Add([FromBody] RezeptDto rezeptDto)
     {
+        if (rezeptDto == null) return BadRequest("rezept may not be null.");
+
         Rezept rezept = Rezept.Create(rezeptDto);
         _rezeptRepository.Add(rezept);
+
+        return Ok(rezept.ToDto());
     }
 }
