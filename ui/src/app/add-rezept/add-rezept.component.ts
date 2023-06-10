@@ -4,7 +4,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { HttpErrorHandler } from 'src/app/http-error-handler.service';
 import { MessageService } from 'src/app/message.service';
 import { Rezept } from './Rezept';
 import { RezeptService } from '../rezept.service';
@@ -25,7 +24,7 @@ import { RezeptService } from '../rezept.service';
   styleUrls: ['./add-rezept.component.scss']
 })
 export class AddRezeptComponent {
-  // not marked as static, because I want to access them from the template
+  // not marked as static, because I want to access them conviently from the template
   protected readonly NAME_MIN_LENGTH: number = 3;
   protected readonly NAME_MAX_LENGTH: number = 100;
 
