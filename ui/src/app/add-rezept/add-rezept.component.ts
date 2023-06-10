@@ -21,10 +21,6 @@ import { RezeptService } from '../rezept.service';
     MatButtonModule,
     HttpClientModule
   ],
-  providers: [
-    MessageService, // we need the message service first
-    HttpErrorHandler
-  ],
   templateUrl: './add-rezept.component.html',
   styleUrls: ['./add-rezept.component.scss']
 })
@@ -51,9 +47,7 @@ export class AddRezeptComponent {
         ]]
     });
 
-    // ToDo: use for auto completion and stuff
-    // this.rezeptForm.valueChanges.subscribe();
-    this.rezeptForm.valueChanges.subscribe(() => console.log(this.rezeptForm.value));
+    // ToDo: auto completion and stuff
 
     // This shows how to make a dynamic form for the Zutaten, which can be any number, so the html should be generated based on it..
     // https://youtu.be/JeeUY6WaXiA?t=355
