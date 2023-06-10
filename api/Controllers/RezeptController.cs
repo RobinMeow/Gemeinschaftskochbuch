@@ -35,7 +35,7 @@ public sealed class RezeptController : GkbController
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "OnRezeptAdd");
+            _logger.LogError(ex, GetErrorMessage(nameof(RezeptController), nameof(Add)), rezeptDto);
             return Status_500_Internal_Server_Error;
         }
     }
