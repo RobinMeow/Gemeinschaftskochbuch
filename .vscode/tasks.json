@@ -30,7 +30,7 @@
       },
     },
     {
-      "label":"1. Run Back + Front End",
+      "label":"Run Back + Front End",
       "dependsOn":[
          "RUN FrontEnd",
          "RUN BackEnd"
