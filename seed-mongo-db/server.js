@@ -1,20 +1,46 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
-const uri = "mongodb://localhost:27017";
+const { faker } = require('@faker-js/faker');
+const uri = "mongodb://localhost:27017/gkb";
 const app = express();
 
-async function connectedToMongoDo() {
-  await mongoose.connect(uri)
-    .then((client) => {
-      console.log("Connected to MongoDB");
+async function seed() {
+  try {
+    await mongoose.connect(uri);
+    console.log("Connected to MongoDB");
 
-    }).catch(err => console.error(err));
+    const rezeptSchema = Schema({
+      id: Schema.Types.ObjectId,
+      name: String,
+      erstelldatum: String,
+    });
+
+    const RezeptModel = mongoose.model('rezepte', rezeptSchema);
+    await RezeptModel.createCollection();
+
+    for (let i = 0; i < 10; i++) {
+      const rezeptDocument = new RezeptModel(fakeRandomRezept());
+      await rezeptDocument.save();
+      console.log("created fake rezept.");
+    }
+  } catch (error) {
+    console.error(error)
+  }
 }
 
-connectedToMongoDo();
+seed();
 
 const port = 8418;
 app.listen(port, () => {
   console.log("Server started on port " + port);
+
 });
+
+function fakeRandomRezept() {
+  return {
+    name: faker.image.avatar(),
+    erstelldatum: faker.date.anytime(),
+  };
+}
