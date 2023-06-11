@@ -17,7 +17,7 @@ async function seed() {
       erstelldatum: String,
     });
 
-    const RezeptModel = mongoose.model('rezepte', rezeptSchema);
+    const RezeptModel = mongoose.model('Rezept', rezeptSchema, 'rezepte'); // appends an s ...
     await RezeptModel.createCollection();
 
     for (let i = 0; i < 10; i++) {
