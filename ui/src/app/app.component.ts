@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NgSwitch, NgSwitchDefault, NgSwitchCase } from '@angular/common';
-import { AddRezeptComponent } from "./add-rezept/add-rezept.component";
+import { AddRecipeComponent } from './add-recipe/add-recipe.component';
 
 @Component({
     selector: 'app-root',
@@ -13,7 +13,7 @@ import { AddRezeptComponent } from "./add-rezept/add-rezept.component";
         NgSwitchDefault,
         NgSwitchCase,
         RouterOutlet,
-        AddRezeptComponent
+        AddRecipeComponent
     ]
 })
 export class AppComponent {

@@ -1,23 +1,23 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AddRezeptComponent } from './add-rezept.component';
+import { AddRecipeComponent } from './add-recipe.component';
 import { provideAnimations } from '@angular/platform-browser/animations';
 
-describe('AddRezeptComponent', () => {
-  let component: AddRezeptComponent;
-  let fixture: ComponentFixture<AddRezeptComponent>;
+describe('AddRecipeComponent', () => {
+  let component: AddRecipeComponent;
+  let fixture: ComponentFixture<AddRecipeComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        AddRezeptComponent,
+        AddRecipeComponent,
       ],
       providers: [
         provideAnimations()
       ]
     })
-      .compileComponents();
+    .compileComponents();
 
-    fixture = TestBed.createComponent(AddRezeptComponent);
+    fixture = TestBed.createComponent(AddRecipeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

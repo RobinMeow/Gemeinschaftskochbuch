@@ -6,18 +6,18 @@ namespace api.Controllers;
 
 public static class DtoMappingExtensions
 {
-    public static RezeptDto ToDto(this Rezept rezept)
+    public static RecipeDto ToDto(this Recipe recipe)
     {
-        return new RezeptDto{
-            Id = rezept.Id,
-            ModelVersion = rezept.ModelVersion,
-            Name = rezept.Name,
-            Erstelldatum = rezept.Erstelldatum
+        return new RecipeDto{
+            Id = recipe.Id,
+            ModelVersion = recipe.ModelVersion,
+            Name = recipe.Name,
+            CreatedAt = recipe.CreatedAt
         };
     }
 
-    public static IEnumerable<RezeptDto> ToDto(this IEnumerable<Rezept> rezepte)
+    public static IEnumerable<RecipeDto> ToDto(this IEnumerable<Recipe> recipe)
     {
-        return rezepte.Select(rezept => rezept.ToDto());
+        return recipe.Select(recipe => recipe.ToDto());
     }
 }

@@ -8,5 +8,5 @@ public abstract class Entity
 
     public abstract int ModelVersion { get; set; } // start at zero, so the version is also the amount of times, it was changed :)
 
-    public DateTime Erstelldatum { get; set; }
+    public DateTime CreatedAt { get; set; }
 }

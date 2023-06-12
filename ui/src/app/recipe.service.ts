@@ -1,11 +1,11 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError } from 'rxjs';
-import { Rezept } from './add-rezept/Rezept';
+import { Recipe } from './add-recipe/Recipe';
 import { HandleError, HttpErrorHandler } from './http-error-handler.service';
-import { NewRezept } from './add-rezept/NewRezept';
+import { NewRecipe } from './add-recipe/NewRecipe';
 
-const API: string = 'http://localhost:5263/Rezept/';
+const API: string = 'http://localhost:5263/Recipe/';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -17,27 +17,27 @@ const httpOptions = {
 @Injectable({
   providedIn: 'root',
 })
-export class RezeptService {
+export class RecipeService {
   private readonly _handleError: HandleError; // https://angular.io/guide/http#sending-data-to-a-server
 
   constructor(
     private _httpClient: HttpClient,
     httpErrorHandler: HttpErrorHandler
     ) {
-    this._handleError = httpErrorHandler.createHandleError('RezeptService');
+    this._handleError = httpErrorHandler.createHandleError('RecipeService');
   }
 
-  add(rezept: NewRezept): Observable<Rezept | null> {
+  add(recipe: NewRecipe): Observable<Recipe | null> {
     const functionName: string = 'Add';
-    return this._httpClient.post<Rezept>(API + functionName, rezept, httpOptions)
+    return this._httpClient.post<Recipe>(API + functionName, recipe, httpOptions)
       .pipe(
         catchError(this._handleError(functionName, null))
       );
   }
 
-  getAll(): Observable<Rezept[]> {
+  getAll(): Observable<Recipe[]> {
     const functionName: string = 'GetAll';
-    return this._httpClient.get<Rezept[]>(API + functionName)
+    return this._httpClient.get<Recipe[]>(API + functionName)
       .pipe(
         catchError(this._handleError(functionName, []))
       );

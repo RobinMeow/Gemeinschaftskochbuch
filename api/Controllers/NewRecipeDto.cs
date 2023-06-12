@@ -1,6 +1,6 @@
 namespace api.Controllers;
 
-public class NewRezeptDto
+public class NewRecipeDto
 {
     public string Name { get; init; } = string.Empty;
 }

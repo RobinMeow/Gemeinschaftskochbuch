@@ -5,25 +5,25 @@ using MongoDB.Driver;
 
 namespace api.Infrastructure;
 
-public sealed class RezeptMongoDbCollection : IRezeptRepository
+public sealed class RecipeMongoDbCollection : IRecipeRepository
 {
-    public const string COLLECTION_NAME = "rezepte";
-	readonly IMongoCollection<Rezept> _collection;
+    public const string COLLECTION_NAME = "recipes";
+	readonly IMongoCollection<Recipe> _collection;
 
-    public RezeptMongoDbCollection(IMongoCollection<Rezept> collection)
+    public RecipeMongoDbCollection(IMongoCollection<Recipe> collection)
     {
 		_collection = collection;
     }
 
-    public async void Add(Rezept rezept)
+    public async void Add(Recipe recipe)
     {
-		await _collection.InsertOneAsync(rezept);
+		await _collection.InsertOneAsync(recipe);
     }
 
-    public async Task<IEnumerable<Rezept>> GetAllAsync()
+    public async Task<IEnumerable<Recipe>> GetAllAsync()
     {
         return await _collection
-			.Find<Rezept>(_ => true)
+			.Find<Recipe>(_ => true)
 			.ToListAsync();
     }
 }
