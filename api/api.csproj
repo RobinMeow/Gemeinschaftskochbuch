@@ -4,6 +4,8 @@
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
+    <!-- Because there is a (yet unkown bug by Microsoft or I didnt find it https://github.com/dotnet/roslyn/labels/New%20Language%20Feature%20-%20Nullable%20Reference%20Types) which shows a non nullable class could be null after it has been initialized in the constructor. Same for interface and abstract class  -->
+    <!-- <NoWarn>CS8618</NoWarn>  -->
   </PropertyGroup>
 
   <ItemGroup>
