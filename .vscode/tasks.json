@@ -130,6 +130,20 @@
       "options": {
         "cwd": "./api/"
       }
+    },
+
+    // Seeding
+    {
+      "label": "seed mongo db",
+      "command": "node",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": "$jshint",
+      "args": [
+        "./seed-mongo-db/server.js"
+      ]
     }
   ]
 }
