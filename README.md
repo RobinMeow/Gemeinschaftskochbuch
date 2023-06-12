@@ -23,10 +23,10 @@ Not part of set-up, but my preference:
 ## Architecture
 
 - angular for Front-End
-- .NET 7 for Back-End
-- Google Auth for Accounts (which I can implement using firebase afaik)
+- ASP.NET Core webapi .NET 7 for Back-End
+- Firebase Auth
 - Firebase for Hosting
-- Firestore as Database (tho Im not decided on the database yet, but its needs to be free of charge)
+- MongoDB as persistence mechanism
 
 ## Development
 

@@ -18,7 +18,7 @@ async function seed() {
     });
 
     const collectionName = 'rezepte';
-    const RezeptModel = mongoose.model('Rezept', rezeptSchema, collectionName); // appends an s ...
+    const RezeptModel = mongoose.model('Rezept', rezeptSchema, collectionName);
     await RezeptModel.createCollection();
 
     for (let i = 0; i < 10; i++) {
