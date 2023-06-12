@@ -20,35 +20,30 @@ Not part of set-up, but my preference:
 
 - disallow implicit usings and change code accordingly by adding the usings
 
+## Requirements
+
+ToDo: move requirements to here from confluence.
+
 ## Architecture
 
-- angular for Front-End
-- ASP.NET Core webapi .NET 7 for Back-End
-- Firebase Auth
-- Firebase for Hosting
-- MongoDB as persistence mechanism
+- Front-End Angular using standalone "stuff" [ui/README](ui/README.md)
+- Back-End dotnet webapi (ASP.NET Core with .NET 7) [api/README](api/README.md)
+- Persistence Mechanism is/will be implemented using MongoDB.
 
 ## Development
 
-API:
+To start Back and Front End, you can use the VSCode Run Task `Run Back + Front End`.
 
-1. navigate to your root directory. 'Gemeinschaftskochbuch'
-2. Start local web server: 'dotnet run --project .\api\'
+It will `ng serve` the `ui` (angular) app and `dotnet run` the web`api` app.
 
-UI:
+To get database working, you need to download and install the [MongoDB Community Server](https://www.mongodb.com/try/download/community) (Which should be enough, but I personally installed the mongoshell as well as CmdLine Database Tools and Atlas CLI))
 
-1. navigate to your ui directory. 'Gemeinschaftskochbuch/ui'
-2. Start Locale Dev Server for angular `ng serve`
+## Others
 
-> apprently there is more than one way to pass a path to ng serve, but it seemed to change often, so I didnt bother reading into it, as it is likely to change again.
+I wanted to have everything in a single git repository and a single vscode workspace for easy of development. (As it is easy to split them up anyways since they do not have dependencies to each other)
 
-## Debug
+## Seeding
 
-In order to debug, launch.json and task.json had to be created at root level for the Run and Debug VSCode extension tab to work.
-Mostly, it simply redirects to the tasks wihtin api and ui.
-I opened the api folder in its own vscode window, to get the pop up which asks to generate launch and tasks files. (you can also go to the debug tab and press create files, but this will also only work, when api is your root folder in the workspace).
+use the Run Task or run `node .\seed-mongo-do\server.js`.
 
-## Custom Tasks
-
-There is one Task, you can execute, which starts `ng serve` and `dotnet run` in separate terminals.
-Its name is "Run Back + Front End"
+It will create a few Recipes (locally only) with the use of `mongoose` and `faker.js`.

@@ -1,6 +1,6 @@
 # Seeding MongoDB Locally for development
 
-The use will wipe the database called `gkb` and and then build it back up with new (random) data.
+The use will wipe the database called `gkb` and and then build it back up with new (random) data. (actually it doesnt wipe the data yet, I have used the mongosh for this so far)
 
 1. run `npm install`
 2. run `node server.js`
