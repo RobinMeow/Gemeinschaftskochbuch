@@ -32,7 +32,7 @@ internal class Program
         // Singleton: instance per 'deploy' (per application lifetime)
         // Scoped: instance per HTTP request
         // Transient: instance per code request.
-        builder.Services.AddScoped<DbContext, MongoDbContext>();
+        builder.Services.AddScoped<DbContext, MongoDbContext>(); // Apperently its best practise to have it a singleton. I dont see a reason to leave a db connection open for ever. So I stick to scoped. Retrieving a connection from to pool and returning it once per http request seems more reasonable.
 
         WebApplication app = builder.Build();
 
