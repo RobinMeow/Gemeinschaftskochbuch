@@ -7,7 +7,7 @@ public abstract class GkbController : ControllerBase
 {
     protected IActionResult Status_500_Internal_Server_Error => StatusCode(StatusCodes.Status500InternalServerError);
 
-    protected string GetErrorMessage(string controllerName, string methodName)
+    protected string CreateErrorMessage(string controllerName, string methodName)
     {
         return $"In {controllerName} On {methodName}";
     }

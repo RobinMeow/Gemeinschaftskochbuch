@@ -18,6 +18,14 @@ public sealed class MongoDbContext : DbContext
         const string __v = "__v";
         const string _id = "_id";
 
+        // IDK yet if this is relevant (or how I will use DI or something else to seperate between deployment and local development)
+        // string? connectionString = System.Environment.GetEnvironmentVariable("MONGODB_URI");
+        // if (connectionString == null)
+        // {
+        //     System.Console.WriteLine("You must set your 'MONGODB_URI' environmental variable. See\n\t https://www.mongodb.com/docs/drivers/go/current/usage-examples/#environment-variable");
+        //     System.Environment.Exit(0);
+        // }
+
         ConventionPack camelCaseConvention = new ConventionPack { new CamelCaseElementNameConvention() };
         ConventionRegistry.Register("CamelCase", camelCaseConvention, type => true);
 

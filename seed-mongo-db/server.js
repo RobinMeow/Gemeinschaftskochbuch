@@ -28,7 +28,7 @@ async function seed() {
 
     await RezeptModel.createCollection();
 
-    const amountFakeRezepte = 2;
+    const amountFakeRezepte = 55;
 
     for (let i = 0; i < amountFakeRezepte; i++) {
       const fakeRezept = fakeRandomRezept();

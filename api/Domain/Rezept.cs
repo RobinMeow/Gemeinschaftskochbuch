@@ -12,14 +12,12 @@ public sealed class Rezept : Entity
 
     public required string Name { get; set; }
 
-    public DateTime Erstelldatum { get; set; }
-
     public static Rezept Create(api.Controllers.NewRezeptDto newRezept) // ToDo: Make class partial and move to Application Layer (Controllers for now)
     {
         return new Rezept(){
             Id = EntityId.New(),
-            Name = newRezept.Name,
-            Erstelldatum = DateTime.UtcNow // Make Serializer which checks for DateTimeKind and parses is to Utc if it is local
+            Erstelldatum = DateTime.UtcNow, // Make Serializer which checks for DateTimeKind and parses is to Utc if it is local
+            Name = newRezept.Name
         };
     }
 }

@@ -38,7 +38,7 @@ public sealed class RezeptController : GkbController
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, GetErrorMessage(nameof(RezeptController), nameof(Add)), newRezept);
+            _logger.LogError(ex, CreateErrorMessage(nameof(RezeptController), nameof(Add)), newRezept);
             return Status_500_Internal_Server_Error;
         }
     }
@@ -53,7 +53,7 @@ public sealed class RezeptController : GkbController
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, GetErrorMessage(nameof(RezeptController), nameof(GetAll)));
+            _logger.LogError(ex, CreateErrorMessage(nameof(RezeptController), nameof(GetAll)));
             return Status_500_Internal_Server_Error;
         }
     }

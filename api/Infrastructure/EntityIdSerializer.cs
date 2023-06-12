@@ -22,6 +22,4 @@ public sealed class EntityIdSerializer : IBsonSerializer
         string entityId = (EntityId)value;
         context.Writer.WriteString(entityId);
     }
-
-    // use an intermediate BsonDateTime so MinValue and MaxValue are handled correctly (source: https://github.com/mongodb/mongo-csharp-driver/blob/master/src/MongoDB.Bson/Serialization/Serializers/DateTimeSerializer.cs)
 }
