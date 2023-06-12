@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using api.Domain;
-using api.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -12,12 +12,15 @@ namespace api.Controllers;
 public sealed class RezeptController : GkbController
 {
     readonly ILogger<RezeptController> _logger;
-    readonly RezeptRepository _rezeptRepository;
+    readonly IRezeptRepository _rezeptRepository;
 
-    public RezeptController(ILogger<RezeptController> logger)
+    public RezeptController(
+        ILogger<RezeptController> logger,
+        DbContext dbContext
+        )
     {
         _logger = logger;
-        _rezeptRepository = new RezeptRepository();
+        _rezeptRepository = dbContext.RezeptRepository;
     }
 
     [HttpPost(nameof(Add))]
@@ -40,11 +43,11 @@ public sealed class RezeptController : GkbController
     }
 
     [HttpGet(nameof(GetAll))]
-    public IActionResult GetAll()
+    public async ValueTask<IActionResult> GetAll()
     {
         try
         {
-            IEnumerable<Rezept> rezepte = _rezeptRepository.GetAll();
+            IEnumerable<Rezept> rezepte = await _rezeptRepository.GetAll();
             return Ok(rezepte.ToDto());
         }
         catch (Exception ex)

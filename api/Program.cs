@@ -1,3 +1,5 @@
+using api.Domain;
+using api.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,6 +28,11 @@ internal class Program
                 .AllowAnyMethod();
             });
         });
+
+        // Singleton: instance per 'deploy' (per application lifetime)
+        // Scoped: instance per HTTP request
+        // Transient: instance per code request.
+        builder.Services.AddScoped<DbContext, MongoDbContext>();
 
         WebApplication app = builder.Build();
 

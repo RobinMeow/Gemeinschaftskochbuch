@@ -1,36 +1,29 @@
-using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using api.Domain;
+using MongoDB.Driver;
 
 namespace api.Infrastructure;
 
-public sealed class RezeptRepository
+public sealed class RezeptMongoDbCollection : IRezeptRepository
 {
-    readonly List<Rezept> _InMemoryDebugTestData = new List<Rezept> {
-		new Rezept(){
-			Id = Guid.NewGuid(),
-			Erstelldatum = DateTime.Now,
-			Name = "1. Rezept"
-		},
-		new Rezept(){
-			Id = Guid.NewGuid(),
-			Erstelldatum = DateTime.MaxValue,
-			Name = "2. Rezept"
-		},
-		new Rezept(){
-			Id = Guid.NewGuid(),
-			Erstelldatum = DateTime.MinValue,
-			Name = "3. Rezept"
-		},
-	};
+    public const string COLLECTION_NAME = "rezepte";
+	readonly IMongoCollection<Rezept> _collection;
 
-    internal void Add(Rezept rezept)
+    public RezeptMongoDbCollection(IMongoCollection<Rezept> collection)
     {
-        _InMemoryDebugTestData.Add(rezept);
+		_collection = collection;
     }
 
-    internal IEnumerable<Rezept> GetAll()
+    public async void Add(Rezept rezept)
     {
-        return _InMemoryDebugTestData;
+		await _collection.InsertOneAsync(rezept);
+    }
+
+    public async Task<IEnumerable<Rezept>> GetAll()
+    {
+        return await _collection
+			.Find<Rezept>(_ => true)
+			.ToListAsync();
     }
 }
