@@ -15,7 +15,7 @@ public sealed class RezeptMongoDbCollection : IRezeptRepository
 		_collection = collection;
     }
 
-    public async void AddAsync(Rezept rezept)
+    public async void Add(Rezept rezept)
     {
 		await _collection.InsertOneAsync(rezept);
     }

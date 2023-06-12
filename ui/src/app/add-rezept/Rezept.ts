@@ -1,5 +1,6 @@
-export interface Rezept {
-  id: string;
+import { Entity } from "../common/Entity";
+
+export interface Rezept extends Entity {
   name: string;
-  erstelldatum: string;
+  erstelldatum: Date;
 }

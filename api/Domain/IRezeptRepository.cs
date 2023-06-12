@@ -5,6 +5,6 @@ namespace api.Domain;
 
 public interface IRezeptRepository
 {
-    void AddAsync(Rezept rezept);
+    void Add(Rezept rezept);
     Task<IEnumerable<Rezept>> GetAllAsync();
 }

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, catchError } from 'rxjs';
 import { Rezept } from './add-rezept/Rezept';
 import { HandleError, HttpErrorHandler } from './http-error-handler.service';
+import { NewRezept } from './add-rezept/NewRezept';
 
 const API: string = 'http://localhost:5263/Rezept/';
 
@@ -24,13 +25,13 @@ export class RezeptService {
     httpErrorHandler: HttpErrorHandler
     ) {
     this._handleError = httpErrorHandler.createHandleError('RezeptService');
-   }
+  }
 
-  add(rezept: Rezept): Observable<Rezept> {
+  add(rezept: NewRezept): Observable<Rezept | null> {
     const functionName: string = 'Add';
     return this._httpClient.post<Rezept>(API + functionName, rezept, httpOptions)
       .pipe(
-        catchError(this._handleError(functionName, rezept))
+        catchError(this._handleError(functionName, null))
       );
   }
 

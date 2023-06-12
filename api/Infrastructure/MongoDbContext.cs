@@ -21,20 +21,21 @@ public sealed class MongoDbContext : DbContext
         ConventionPack camelCaseConvention = new ConventionPack { new CamelCaseElementNameConvention() };
         ConventionRegistry.Register("CamelCase", camelCaseConvention, type => true);
 
-        if (!BsonClassMap.IsClassMapRegistered(typeof(Rezept)))
+        if (!BsonClassMap.IsClassMapRegistered(typeof(Rezept))) // ToDo: Check where this call belongs
         {
             // Serializers (in expectation to have the same lifetime scope as ClassMaps)
-
-            BsonClassMap.RegisterClassMap<Rezept>(x => {
-                x.SetDiscriminator(nameof(Entity));
-                x.AutoMap();
-                // x.GetMemberMap(x => x.Erstelldatum).SetSerializer()
-            });
+            BsonSerializer.RegisterSerializer(typeof(System.DateTime), new DateTimeSerializer());
 
             BsonClassMap.RegisterClassMap<Entity>(x => {
                 x.AutoMap(); // EntityId
                 x.MapMember(entity => entity.ModelVersion).SetElementName(__v);
                 x.MapMember(x => x.Id).SetElementName(_id).SetSerializer(new EntityIdSerializer());
+            });
+
+            BsonClassMap.RegisterClassMap<Rezept>(x => {
+                x.SetDiscriminator(nameof(Entity));
+                x.AutoMap();
+                // x.GetMemberMap(x => x.Erstelldatum).SetSerializer()
             });
         }
 

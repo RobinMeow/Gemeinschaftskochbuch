@@ -4,9 +4,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { MessageService } from '../message.service';
 import { Rezept } from './Rezept';
 import { RezeptService } from '../rezept.service';
+import { NewRezept } from './NewRezept';
 
 @Component({
   selector: 'app-add-rezept',
@@ -56,12 +56,14 @@ export class AddRezeptComponent {
   protected onAdd(): void {
     if (!this.rezeptForm.valid) return;
 
-    const rezept: Rezept = {
+    const newRezept: NewRezept = { // ToDo: This is so terrible, make a seperate Model for creation ..
       name: this.name.value,
-    } as Rezept;
+    };
 
-    const addRezept$ = this._rezeptService.add(rezept);
-    addRezept$.subscribe((rezept: Rezept) => {
+    const addRezept$ = this._rezeptService.add(newRezept);
+    addRezept$.subscribe((rezept: Rezept | null) => {
+      if (rezept == null) return; // ToDo: Display nice error snackbar or something similar.
+
       this.rezepte.push(rezept);
     });
   }

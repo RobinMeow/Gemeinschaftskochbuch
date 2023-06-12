@@ -24,20 +24,21 @@ public sealed class RezeptController : GkbController
     }
 
     [HttpPost(nameof(Add))]
-    public IActionResult Add([FromBody] RezeptDto rezeptDto)
+    public IActionResult Add([FromBody] NewRezeptDto newRezept)
     {
         try
         {
-            if (rezeptDto == null) return BadRequest("rezept may not be null.");
+            if (newRezept.Name.Length < Rezept.NAME_MIN_LENGTH) return BadRequest(nameof(Rezept) + nameof(Rezept.Name) + " too short.");
+            if (newRezept.Name.Length > Rezept.NAME_MAX_LENGTH) return BadRequest(nameof(Rezept) + nameof(Rezept.Name) + " too long.");
 
-            Rezept rezept = Rezept.Create(rezeptDto);
-            _rezeptRepository.AddAsync(rezept);
+            Rezept rezept = Rezept.Create(newRezept);
+            _rezeptRepository.Add(rezept);
 
             return Ok(rezept.ToDto());
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, GetErrorMessage(nameof(RezeptController), nameof(Add)), rezeptDto);
+            _logger.LogError(ex, GetErrorMessage(nameof(RezeptController), nameof(Add)), newRezept);
             return Status_500_Internal_Server_Error;
         }
     }

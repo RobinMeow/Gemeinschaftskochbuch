@@ -8,13 +8,13 @@ namespace api.Infrastructure;
 public sealed class RezeptInMemoryCollection : IRezeptRepository
 {
     readonly List<Rezept> _rezepte = new List<Rezept> {
-		Rezept.Create(new Controllers.RezeptDto(){ Name = "1. Rezept" }),
-		Rezept.Create(new Controllers.RezeptDto(){ Name = "2. Rezept" }),
-		Rezept.Create(new Controllers.RezeptDto(){ Name = "3. Rezept" }),
-		Rezept.Create(new Controllers.RezeptDto(){ Name = "4. Rezept" }),
+		Rezept.Create(new Controllers.NewRezeptDto(){ Name = "1. Rezept" }),
+		Rezept.Create(new Controllers.NewRezeptDto(){ Name = "2. Rezept" }),
+		Rezept.Create(new Controllers.NewRezeptDto(){ Name = "3. Rezept" }),
+		Rezept.Create(new Controllers.NewRezeptDto(){ Name = "4. Rezept" }),
 	};
 
-    public void AddAsync(Rezept rezept)
+    public void Add(Rezept rezept)
     {
         _rezepte.Add(rezept);
     }
