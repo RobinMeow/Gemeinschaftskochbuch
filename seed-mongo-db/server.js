@@ -53,6 +53,6 @@ function fakeRandomRezept() {
   return {
     // id is genrated by mongo db
     name: faker.image.avatar(),
-    erstelldatum: faker.date.anytime(),
+    erstelldatum: faker.date.anytime().toISOString(),
   };
 }
