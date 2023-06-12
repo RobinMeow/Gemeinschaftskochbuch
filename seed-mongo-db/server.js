@@ -7,7 +7,7 @@ const uri = "mongodb://localhost:27017/gkb";
 const app = express();
 
 const rezeptSchema = Schema({
-  id: Schema.Types.ObjectId,
+  _id: Schema.Types.String,
   name: String,
   erstelldatum: String,
 });
@@ -51,8 +51,8 @@ app.listen(port, () => {
 
 function fakeRandomRezept() {
   return {
-    // id is genrated by mongo db
-    name: faker.image.avatar(),
+    _id: faker.string.uuid(), // '4136cd0b-d90b-4af7-b485-5d1ded8db252'
+    name: faker.commerce.productName(), // 'Incredible Soft Gloves'
     erstelldatum: faker.date.anytime().toISOString(),
   };
 }
