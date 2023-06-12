@@ -8,8 +8,9 @@ const app = express();
 
 const rezeptSchema = Schema({
   _id: Schema.Types.String,
-  name: String,
-  erstelldatum: String,
+  __v: Schema.Types.Number,
+  name: Schema.Types.String,
+  erstelldatum: Schema.Types.String,
 });
 
 const collectionName = 'rezepte';
@@ -27,10 +28,11 @@ async function seed() {
 
     await RezeptModel.createCollection();
 
-    const amountFakeRezepte = 100;
+    const amountFakeRezepte = 2;
 
     for (let i = 0; i < amountFakeRezepte; i++) {
-      const rezeptDocument = new RezeptModel(fakeRandomRezept());
+      const fakeRezept = fakeRandomRezept();
+      const rezeptDocument = new RezeptModel(fakeRezept);
       await rezeptDocument.save();
     }
 
@@ -52,7 +54,8 @@ app.listen(port, () => {
 function fakeRandomRezept() {
   return {
     _id: faker.string.uuid(), // '4136cd0b-d90b-4af7-b485-5d1ded8db252'
+    __v: 0,
     name: faker.commerce.productName(), // 'Incredible Soft Gloves'
-    erstelldatum: faker.date.anytime().toISOString(),
+    erstelldatum: new Date(faker.date.past().toUTCString()).toISOString(), // '2022-07-31T01:33:29.567Z' (ToISO is neccessary, the doc in anytime is a lie)
   };
 }

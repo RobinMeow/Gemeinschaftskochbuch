@@ -2,9 +2,9 @@ using System;
 
 namespace api.Controllers;
 
-public sealed class RezeptDto
+public sealed class RezeptDto : EntityDto
 {
-    public Guid Id { get; set; }
+    public override int ModelVersion { get; set; } = Domain.Rezept.MODEL_VERSION;
     public required string Name { get; set; }
     public DateTime Erstelldatum { get; set; }
 }

@@ -31,7 +31,7 @@ public sealed class RezeptController : GkbController
             if (rezeptDto == null) return BadRequest("rezept may not be null.");
 
             Rezept rezept = Rezept.Create(rezeptDto);
-            _rezeptRepository.Add(rezept);
+            _rezeptRepository.AddAsync(rezept);
 
             return Ok(rezept.ToDto());
         }
@@ -47,7 +47,7 @@ public sealed class RezeptController : GkbController
     {
         try
         {
-            IEnumerable<Rezept> rezepte = await _rezeptRepository.GetAll();
+            IEnumerable<Rezept> rezepte = await _rezeptRepository.GetAllAsync();
             return Ok(rezepte.ToDto());
         }
         catch (Exception ex)

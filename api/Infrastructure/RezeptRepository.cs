@@ -15,12 +15,12 @@ public sealed class RezeptMongoDbCollection : IRezeptRepository
 		_collection = collection;
     }
 
-    public async void Add(Rezept rezept)
+    public async void AddAsync(Rezept rezept)
     {
 		await _collection.InsertOneAsync(rezept);
     }
 
-    public async Task<IEnumerable<Rezept>> GetAll()
+    public async Task<IEnumerable<Rezept>> GetAllAsync()
     {
         return await _collection
 			.Find<Rezept>(_ => true)
