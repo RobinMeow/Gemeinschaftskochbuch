@@ -24,4 +24,12 @@
 <br>
 
 <h2>Alle Rezepte: </h2>
-<pre><code><ng-container *ngFor="let recipe of recipes">{{ recipe | json }}<br>{{ recipe.erstelldatum | date:'full' }}<br>{{ recipe.erstelldatum }}<br></ng-container></code></pre>
+<pre>
+    <code>
+        <ng-container *ngFor="let recipe of recipes">
+{{ recipe | json }}<br>
+{{ recipe.createdAt | date:'full' }}<br>
+{{ recipe.createdAt }}<br>
+        </ng-container>
+    </code>
+</pre>
