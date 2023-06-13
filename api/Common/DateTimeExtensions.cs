@@ -6,9 +6,9 @@ public static class DateTimeExtensions
 {
     public static string ToISOString(this DateTime date)
     {
-        if (date.Kind != DateTimeKind.Utc)
-            date = date.ToUniversalTime();
+        if (date.Kind == DateTimeKind.Utc)
+            return date.ToString("o", System.Globalization.CultureInfo.InvariantCulture);
 
-        return date.ToString("o", System.Globalization.CultureInfo.InvariantCulture); // Round-trip Format Specifier (“o”);
+        return date.ToUniversalTime().ToString("o", System.Globalization.CultureInfo.InvariantCulture);
     }
 }
