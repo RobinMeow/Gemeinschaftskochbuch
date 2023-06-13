@@ -20,7 +20,7 @@ public sealed class NewRecipeSpecification
         return !_newRecipe.HasErrors();
     }
 
-    void ValidateName(string name)
+    void ValidateName(string? name)
     {
         if (name == null)
             _newRecipe.AddErrorMessage($"Name is required.");
