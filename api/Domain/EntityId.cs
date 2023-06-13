@@ -1,27 +1,59 @@
 using System;
-using api.Assertions;
 
 namespace api.Domain;
 
 public sealed record EntityId
 {
+    public const string GuidFormat = "D";
+    public static readonly string[] DisallowedIds = {
+        "00000000-0000-0000-0000-000000000000",
+        "ffffffff-ffff-ffff-ffff-ffffffffffff",
+        "FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF"
+    };
+
+    string _id = "00000000-0000-0000-0000-000000000000";
+
+    public string Id { get => _id; }
+
     public EntityId(string id)
     {
-        AssertArgument.ArgumentNotNull(id, nameof(id));
+        if (string.IsNullOrWhiteSpace(id))
+            throw new ArgumentNullException(nameof(id), $"{nameof(Id)} cannot be null or white space.");
 
-        string EMPTY_GUID = Guid.Empty.ToString();
-        Assert.False(id == EMPTY_GUID, $"'{id}' may not be an empty guid.");
-        Assert.False(id == EMPTY_GUID.Replace("0", "F"), $"'{id}' may not be a full guid.");
-        Assert.True(Guid.TryParseExact(id, "D", out _), $"'{id}' has to be a 'D' formatted guid.");
+        if (!IsValidGuidFormat(id))
+            throw new ArgumentException($"{nameof(Id)} must be in the '{GuidFormat}' formatted GUID in all lowercase.");
 
-        Id = id.ToLower();
+        if (IsDisallowedId(id))
+            throw new ArgumentException($"{nameof(Id)} cannot be a disallowed GUID.");
+
+        _id = id.ToLower();
     }
 
-    public string Id { get; init; } = null!;
+    public static bool IsValidGuidFormat(string id)
+    {
+        return Guid.TryParseExact(id, GuidFormat, out _);
+    }
+
+    public static bool IsDisallowedId(string id)
+    {
+        for (int i = 0; i < DisallowedIds.Length; i++)
+            if (DisallowedIds[i] == id)
+                return true;
+        return false;
+    }
+
+    public static EntityId New()
+    {
+        string newId;
+
+        do
+            newId = Guid.NewGuid().ToString(GuidFormat).ToLower();
+        while (IsDisallowedId(newId));
+
+        return new EntityId(newId);
+    }
 
     public static implicit operator string(EntityId entityId) => entityId.Id;
-
-    public static EntityId New() => new EntityId(Guid.NewGuid().ToString().ToLower());
 
     public override string ToString()
     {
