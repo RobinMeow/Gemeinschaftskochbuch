@@ -29,6 +29,9 @@ or you can read the ['big blue book' by Eric Evans](https://www.amazon.de/Domain
 
 > Essentially any Business Logic remains here. This is what the actual application 'is about'.
 
+Also the Domain is responsible for every data-related problems.
+Meaning, IDs and dates will all be generated here, not in the front end, nor the database. (If think this has obvious reasons and advantages I dont need to point out)
+
 ### Infrastructure Layer
 
 Thrid Party Libraries/Frameworks/etc. will have their `ConcreteImplementation` here.
