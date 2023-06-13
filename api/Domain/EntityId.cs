@@ -4,7 +4,9 @@ namespace api.Domain;
 
 public sealed record EntityId
 {
+    /// <summary>The format for representing a GUID as a string.</summary>
     public const string GuidFormat = "D";
+
     public static readonly string[] DisallowedIds = {
         "00000000-0000-0000-0000-000000000000",
         "ffffffff-ffff-ffff-ffff-ffffffffffff",
@@ -15,6 +17,8 @@ public sealed record EntityId
 
     public string Id { get => _id; }
 
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="id"/> is null or white space.</exception>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="id"/> is not in the correct format or is a disallowed ID.</exception>
     public EntityId(string id)
     {
         if (string.IsNullOrWhiteSpace(id))
@@ -42,6 +46,8 @@ public sealed record EntityId
         return false;
     }
 
+    /// <summary>Generates a new valid entity ID by generating a new GUID string until a non-disallowed ID is found.</summary>
+    /// <returns>A new <see cref="EntityId"/> instance.</returns>
     public static EntityId New()
     {
         string newId;
