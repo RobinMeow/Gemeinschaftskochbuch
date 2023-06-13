@@ -8,5 +8,11 @@ public abstract class Entity
 
     public abstract int ModelVersion { get; set; } // start at zero, so the version is also the amount of times, it was changed :)
 
-    public DateTime CreatedAt { get; set; }
+    DateTime _createdAt = DateTime.MinValue.ToUniversalTime();
+
+    public DateTime CreatedAt
+    {
+        get => _createdAt;
+        set => _createdAt = DateTime.SpecifyKind(value.ToUniversalTime(), DateTimeKind.Utc);
+    }
 }
