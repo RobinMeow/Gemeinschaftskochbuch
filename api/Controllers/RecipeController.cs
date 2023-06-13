@@ -28,10 +28,11 @@ public sealed class RecipeController : GkbController
     {
         try
         {
-            if (newRecipe.Name.Length < Recipe.NAME_MIN_LENGTH) return BadRequest(nameof(Recipe) + nameof(Recipe.Name) + " too short.");
-            if (newRecipe.Name.Length > Recipe.NAME_MAX_LENGTH) return BadRequest(nameof(Recipe) + nameof(Recipe.Name) + " too long.");
+            var newRecipeSpecification = new NewRecipeSpecification(newRecipe);
+            if (!newRecipeSpecification.IsSatisfied())
+                return BadRequest(newRecipe);
 
-            Recipe recipe = Recipe.Create(newRecipe);
+            Recipe recipe = Create(newRecipe);
             _recipeRepository.Add(recipe);
 
             return Ok(recipe.ToDto());
@@ -41,6 +42,15 @@ public sealed class RecipeController : GkbController
             _logger.LogError(ex, CreateErrorMessage(nameof(RecipeController), nameof(Add)), newRecipe);
             return Status_500_Internal_Server_Error;
         }
+    }
+
+    static Recipe Create(NewRecipeDto newRecipe)
+    {
+        return new Recipe(){
+            Id = EntityId.New(),
+            CreatedAt = DateTime.UtcNow,
+            Name = newRecipe.Name
+        };
     }
 
     [HttpGet(nameof(GetAll))]
