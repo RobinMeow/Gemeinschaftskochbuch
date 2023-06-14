@@ -15,6 +15,3 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The appli
 ## Notes
 
 Actually, havnt done anything in the front end, except set up a simple text field with reactive forms (which is to be extended once I finish the actual Domain Model) and implement some neccessary stuff to test and develop. The whole front-end still needs to be designed and created.
-
-> 50% of my Motivation is creating the app so it can solve the "problem" for my family and friends.
-> Other 50% is just me wanting to learn whole bunch of up2date technologies I have not touched yet. So I Over-Engineer on purpose, to learn, also I dont wann get stuck in the middle of my project, so I "answer the unkonws early" before I start with the actual development. I might even go so far, and read in automated build pipelines (using Azur or Bitbucket I think? idk, never done, but I feel like the need arises slowly. But it needs to be free of charge :D )

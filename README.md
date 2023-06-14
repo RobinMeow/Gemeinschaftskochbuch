@@ -1,28 +1,40 @@
 # Gemeinschaftskochbuch
 
-Set-Up was done as follows (Using a Windows 10 OS):
+Welcome to Gemeinschaftskochbuch, a community cookbook project where users can share and explore recipes.
+"Community" as in, family and maybe friends, not world wide.
 
-1. make a folder named "Gemeinschaftskochbuch"
-2. open a terminal in that folder (using versions angular CLI 15.2.4 and dotnet 7.0.302)
-3. run `dotnet new webapi -n api`
-    - run `cd ui ; dotnet new gitignore ; cd ..` (you can exclude the `cd`s, but the files needs to be in api/.gitignore)
-4. run `ng new ui` select scss and use Angular Routing
-    - `ng new` initializes a git repository. Delete the `.git` folder
-    - keep the `.gitignore`, it works recursivly
-5. run `git init`
+## Navigation (not ToC)
 
-> When you use VSCode, all (not ignored) files should now be highlighted in green. (When you dont delete the .git folder in the ui folder, it will not highlight them, and not track them)
-
-6. run `git commit -m"Init"`
-    - then I created the repo on GitHub and GitHub showed me 3 commands to execute (add remote as origin, push initial commit, create main branch)
-
-Not part of set-up, but my preference:
-
-- disallow implicit usings and change code accordingly by adding the usings
+- [Development Notes](development-notes.md)
+- [api README](api/README.md)
+- [api-tests README](api-tests/README.md)
+- [ui README](ui/README.md)
+- [seed local mongoDB with fake data README](seed-mongo-db/README.md)
 
 ## Requirements
 
-ToDo: move requirements to here from confluence.
+- The app should be able to recalculate any quantities based on desired amount of dishes, selected by the user.
+- A `Recipe` is considered "uniqie" based on the Auther + RecipeName combination. (Composite Key)
+- Ingredients (their Name) should be reused where possible to avoid different spelling for the same thing. But there should be no additional work for the user.
+  - Exmaple: When "adding a `Ingredient` to a `Recipe` it should have sugesstions of existing Ingredients, and create a new one automatically if you type in a not yet used `Ingredient`.
+  - In a later version it might be desired to have a UI, which allows you to merge two `Ingredients` so all references point to the same `Ingredient`. (Merge `Apple` and `apples` so all point to `apples` and delete `Apple` as `Ingredient`)
+- You should be able to "categorize" or "tag" a `Recipe` for a better search filter experience.
+- A `Recipe` can optionally contain multiple "descriptions", usually used for cooking instructions.
+  - It should also be able to contain multiple `Note`s which should be highlighted in same way.
+    - Example: *InstructionA and InstructionB can be combined if you own an instant pot*
+  - Its probably desired to have the "description"s and `Note`s drag 'n drop'able for reordering the display. (Maybe even the `Ingredients`)
+- The the front-end does only need to support "german" as language. No i18n necessary.
+  - *Multiple languages would cause trouble anyways, because our culinary skills are multi cultured*
+- Since the app should **not** be viewable world wide for everyone, it should have a "key" for the group of people who want to access it, because it should be on the internet.
+- Every user should be able to exclude Recipes (in search filtering) based on its `Author`. This setting may not be visible to others.
+- Some sort of Like/Dislike system for the recipes. But only the postive likes should be public, dislikes are for private use only.
+
+> There are other Requirements written down in the confluence. Still need to put them here. Big sorry.
+
+---
+> My personal requirement: I would like to make this project open source, so I can be deployed easily more than once, for different group's of people.
+
+---
 
 ## Architecture
 
@@ -30,21 +42,23 @@ ToDo: move requirements to here from confluence.
 - Back-End dotnet webapi (ASP.NET Core with .NET 7) [api/README](api/README.md)
 - UnitTests for Back-End [api-tests/README](api-tests/README.md)
 - Persistence Mechanism is/will be implemented using MongoDB.
-
-## Development
-
-To start Back and Front End, you can use the VSCode Run Task `Run Back + Front End`.
-
-It will `ng serve` the `ui` (angular) app and `dotnet run` the web`api` app.
-
-To get database working, you need to download and install the [MongoDB Community Server](https://www.mongodb.com/try/download/community) (Which should be enough, but I personally installed the mongoshell as well as CmdLine Database Tools and Atlas CLI))
+- Even tho they share the same git repository (for my personal convienience), they are decoupled, and it should be kept this way, with the exception of the seeding express app. It may contain references (relative paths) to the TypeScript models, if this helps fully automating the seeding.
 
 ## Others
 
-I wanted to have everything in a single git repository and a single vscode workspace for easy of development. (As it is easy to split them up anyways since they do not have dependencies to each other)
+I wanted to have everything in a single git repository and a single vscode workspace for easy of development. (As it is easy to split them up anyways since they do not have dependencies to each other.)
 
-## Seeding
+Also take into consideration, that I have alot of information put into source code (and README) which I normally wouldnt put there for production code.
 
-use the Run Task or run `node .\seed-mongo-do\server.js`.
+> partly my Motivation is creating the app so it can solve the "problem" for my family and friends.
+>
+> other Motivation is just me wanting to learn whole bunch of up2date technologies I have not touched yet. So I want to implement the whole infrastructure, for learning purpose. Also I dont want to get stuck in the middle of my project, so I get the "answers the unkonws early" before I start with the actual development.
+>
+> This will include deployment, meaning I want a "MVP" deployable version with only a Recipename and a single angular componentfor create and read.
+>
+> I might even go so far, and read into build pipelines (using Azur or Bitbucket I think? idk, never done, but I feel like the need arises slowly. But it needs to be free of charge like everything else in this project :D )
 
-It will create a few Recipes (locally only) with the use of `mongoose` and `faker.js`.
+## Contributions
+
+I don't take contributions, yet.
+> Will do, as soon as I decided which copyleft License to use.
