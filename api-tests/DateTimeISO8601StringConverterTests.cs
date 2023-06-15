@@ -18,12 +18,15 @@ public sealed class DateTimeISO8601StringConverterTests
 
     [Test]
     [TestCaseSource(nameof(GetValidIsoStrings_Constructed))]
-    [SetCulture("zu-ZA")] // I have no idea where this is. Seems like Japan?
+    [SetCulture("zu-ZA")] // South Africa
     public void Convert_ValidIsoString_ReturnsDateTime_zu_ZA(string isoString, DateTime expectedDateTime, int expectedOffset)
-    {
-        DateTime result = DateTimeISO8601StringConverter.Convert(isoString);
-        Assert.That(result, Is.EqualTo(expectedDateTime).Within(TimeSpan.FromTicks(expectedOffset)));
-    }
+        => Convert_ValidIsoString_ReturnsDateTime(isoString, expectedDateTime, expectedOffset);
+
+    [Test]
+    [TestCaseSource(nameof(GetValidIsoStrings_Constructed))]
+    [SetCulture("ja-JP")] // Japan
+    public void Convert_ValidIsoString_ReturnsDateTime_ja_JP(string isoString, DateTime expectedDateTime, int expectedOffset)
+        => Convert_ValidIsoString_ReturnsDateTime(isoString, expectedDateTime, expectedOffset);
 
     static IEnumerable<TestCaseData> GetValidIsoStrings_Constructed()
     {
