@@ -20,13 +20,13 @@ public sealed class DateTimeISO8601StringConverterTests
     [Test]
     [TestCaseSource(nameof(GetValidIsoStrings))]
     [SetCulture("zu-ZA")] // South Africa
-    public void Convert_ValidIsoString_ReturnsDateTime_zu_ZA(string isoString, DateTime expectedDateTime, int expectedOffset)
+    public void Convert_returns_correctly_converted_UTcDateTime_from_valid_IsoString_In_South_Africa(string isoString, DateTime expectedDateTime, int expectedOffset)
         => Convert_returns_correctly_converted_UTcDateTime_from_valid_IsoString(isoString, expectedDateTime, expectedOffset);
 
     [Test]
     [TestCaseSource(nameof(GetValidIsoStrings))]
     [SetCulture("ja-JP")] // Japan
-    public void Convert_ValidIsoString_ReturnsDateTime_ja_JP(string isoString, DateTime expectedDateTime, int expectedOffset)
+    public void Convert_returns_correctly_converted_UTcDateTime_from_valid_IsoString_In_Japan(string isoString, DateTime expectedDateTime, int expectedOffset)
         => Convert_returns_correctly_converted_UTcDateTime_from_valid_IsoString(isoString, expectedDateTime, expectedOffset);
 
     /// <summary>Includes a offset, only, because the DateTime constructor does not support smaller milliseconds than 999. Using magic numbers (ticks) in de ctor instead seemed not readable enough for me to keep the precision.</summary>
@@ -43,7 +43,7 @@ public sealed class DateTimeISO8601StringConverterTests
     }
 
     [Test]
-    [TestCaseSource(nameof(GetValidDateTimeValues))]
+    [TestCaseSource(nameof(GetValidDateTimeUtcValues))]
     public void Convert_ValidDateTime_ReturnsIsoString(DateTime dateTime, string expectedIsoString)
     {
         string result = DateTimeISO8601StringConverter.Convert(dateTime);
@@ -51,22 +51,22 @@ public sealed class DateTimeISO8601StringConverterTests
     }
 
     [Test]
-    [TestCaseSource(nameof(GetValidDateTimeValues))]
-    [SetCulture("zu-ZA")] // I have no idea where this is. Seems like Japan?
+    [TestCaseSource(nameof(GetValidDateTimeUtcValues))]
+    [SetCulture("zu-ZA")] // Japan
     public void Convert_ValidDateTime_ReturnsIsoString_zu_ZA(DateTime dateTime, string expectedIsoString)
     {
         string result = DateTimeISO8601StringConverter.Convert(dateTime);
         Assert.That(result, Is.EqualTo(expectedIsoString));
     }
 
-    static IEnumerable<TestCaseData> GetValidDateTimeValues()
+    static IEnumerable<TestCaseData> GetValidDateTimeUtcValues()
     {
-        yield return new TestCaseData(new DateTime(2023, 06, 14, 12, 34, 56, 123, DateTimeKind.Utc), "2023-06-14T12:34:56.1230000Z");
-        yield return new TestCaseData(new DateTime(2023, 06, 14, 12, 34, 56, 120, DateTimeKind.Utc), "2023-06-14T12:34:56.1200000Z");
-        yield return new TestCaseData(new DateTime(2023, 06, 14, 12, 34, 56, 100, DateTimeKind.Utc), "2023-06-14T12:34:56.1000000Z");
-        yield return new TestCaseData(new DateTime(2023, 06, 14, 12, 34, 56, 002, DateTimeKind.Utc), "2023-06-14T12:34:56.0020000Z");
-        yield return new TestCaseData(new DateTime(2023, 06, 14, 12, 34, 56, 010, DateTimeKind.Utc), "2023-06-14T12:34:56.0100000Z");
-        yield return new TestCaseData(new DateTime(2023, 06, 14, 12, 34, 56, 000, DateTimeKind.Utc), "2023-06-14T12:34:56.0000000Z");
+        yield return new TestCaseData(new DateTime(2023, 06, 14, 12, 34, 56, 123, DateTimeKind.Utc), "2023-06-14T12:34:56.1230000Z"); // Milliseconds: 123
+        yield return new TestCaseData(new DateTime(2023, 06, 14, 12, 34, 56, 120, DateTimeKind.Utc), "2023-06-14T12:34:56.1200000Z"); // Milliseconds: 120
+        yield return new TestCaseData(new DateTime(2023, 06, 14, 12, 34, 56, 100, DateTimeKind.Utc), "2023-06-14T12:34:56.1000000Z"); // Milliseconds: 100
+        yield return new TestCaseData(new DateTime(2023, 06, 14, 12, 34, 56, 002, DateTimeKind.Utc), "2023-06-14T12:34:56.0020000Z"); // Milliseconds: 2
+        yield return new TestCaseData(new DateTime(2023, 06, 14, 12, 34, 56, 010, DateTimeKind.Utc), "2023-06-14T12:34:56.0100000Z"); // Milliseconds: 10
+        yield return new TestCaseData(new DateTime(2023, 06, 14, 12, 34, 56, 000, DateTimeKind.Utc), "2023-06-14T12:34:56.0000000Z"); // Milliseconds: 0
     }
 
     [Test]
