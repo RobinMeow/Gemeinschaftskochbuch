@@ -19,6 +19,20 @@ public sealed class constrcutor
         Assert.That(actual, Is.EqualTo(expected).Within(TimeSpan.FromTicks(expectedOffset)));
     }
 
+    /// <summary>Includes a offset (only!) because the DateTime constructor does not support smaller milliseconds than 999. Using magic numbers (ticks) in the ctor instead seemed not readable enough for me to keep the precision.</summary>
+    static readonly IEnumerable<TestCaseData> _valid_ISO_8601_strings = new TestCaseData[] {
+        new TestCaseData("9999-12-31T23:59:59.9999999Z", new DateTime(9999, 12, 31, 23, 59, 59, 999, DateTimeKind.Utc), 9999),
+        new TestCaseData("2023-06-14T12:34:56.1234567Z", new DateTime(2023, 06, 14, 12, 34, 56, 123, DateTimeKind.Utc), 4567),
+        new TestCaseData("2023-06-14T12:34:56.123456Z", new DateTime(2023, 06, 14, 12, 34, 56, 123, DateTimeKind.Utc), 4560),
+        new TestCaseData("2023-06-14T12:34:56.12345Z", new DateTime(2023, 06, 14, 12, 34, 56, 123, DateTimeKind.Utc), 4500),
+        new TestCaseData("2023-06-14T12:34:56.1234Z", new DateTime(2023, 06, 14, 12, 34, 56, 123, DateTimeKind.Utc), 4000),
+        new TestCaseData("2023-06-14T12:34:56.123Z", new DateTime(2023, 06, 14, 12, 34, 56, 123, DateTimeKind.Utc), 0),
+        new TestCaseData("2023-06-14T12:34:56.12Z", new DateTime(2023, 06, 14, 12, 34, 56, 120, DateTimeKind.Utc), 0),
+        new TestCaseData("2023-06-14T12:34:56.1Z", new DateTime(2023, 06, 14, 12, 34, 56, 100, DateTimeKind.Utc), 0),
+        new TestCaseData("2023-06-14T12:34:56Z", new DateTime(2023, 06, 14, 12, 34, 56, DateTimeKind.Utc), 0),
+        new TestCaseData("0001-01-01T00:00:00Z", new DateTime(1, 01, 01, 00, 00, 00, 0, DateTimeKind.Utc), 0)
+    };
+
     [Test]
     [TestCase("2023-06-14T12:34:56.1234567Z")]
     [TestCase("2023-06-14T12:34:56Z")]
@@ -29,18 +43,6 @@ public sealed class constrcutor
 
         Assert.That(actual.Kind, Is.EqualTo(DateTimeKind.Utc));
     }
-
-    /// <summary>Includes a offset (only!) because the DateTime constructor does not support smaller milliseconds than 999. Using magic numbers (ticks) in the ctor instead seemed not readable enough for me to keep the precision.</summary>
-    static readonly IEnumerable<TestCaseData> _valid_ISO_8601_strings = new TestCaseData[] {
-        new TestCaseData("2023-06-14T12:34:56.1234567Z", new DateTime(2023, 06, 14, 12, 34, 56, 123, DateTimeKind.Utc), 4567),
-        new TestCaseData("2023-06-14T12:34:56.123456Z", new DateTime(2023, 06, 14, 12, 34, 56, 123, DateTimeKind.Utc), 4560),
-        new TestCaseData("2023-06-14T12:34:56.12345Z", new DateTime(2023, 06, 14, 12, 34, 56, 123, DateTimeKind.Utc), 4500),
-        new TestCaseData("2023-06-14T12:34:56.1234Z", new DateTime(2023, 06, 14, 12, 34, 56, 123, DateTimeKind.Utc), 4000),
-        new TestCaseData("2023-06-14T12:34:56.123Z", new DateTime(2023, 06, 14, 12, 34, 56, 123, DateTimeKind.Utc), 0),
-        new TestCaseData("2023-06-14T12:34:56.12Z", new DateTime(2023, 06, 14, 12, 34, 56, 120, DateTimeKind.Utc), 0),
-        new TestCaseData("2023-06-14T12:34:56.1Z", new DateTime(2023, 06, 14, 12, 34, 56, 100, DateTimeKind.Utc), 0),
-        new TestCaseData("2023-06-14T12:34:56Z", new DateTime(2023, 06, 14, 12, 34, 56, DateTimeKind.Utc), 0)
-    };
 
     /// <summary>https://docs.nunit.org/articles/nunit/writing-tests/attributes/culture.html</summary>
     [Test]

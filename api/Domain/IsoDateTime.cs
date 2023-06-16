@@ -20,8 +20,22 @@ public struct IsoDateTime
         "yyyy-MM-dd'T'HH:mm:ss'Z'"
     };
 
-    DateTime _dateTime = DateTime.MinValue;
+    DateTime _dateTime = DateTime.SpecifyKind(DateTime.MinValue, DateTimeKind.Utc);
 
+    /// <summary>
+    /// Converts the specified string in ISO 8601 format to a <see cref="DateTime"/> with <see cref="DateTimeKind.Utc"/>.
+    /// <para>The provided string has to be in a format specified in <see cref="AllowedIsoFormats"/></para>
+    /// <code>
+    /// yyyy-MM-dd'T'HH:mm:ss.fffffff'Z' <br />
+    /// yyyy-MM-dd'T'HH:mm:ss.ffffff'Z' <br />
+    /// yyyy-MM-dd'T'HH:mm:ss.fffff'Z' <br />
+    /// yyyy-MM-dd'T'HH:mm:ss.ffff'Z' <br />
+    /// yyyy-MM-dd'T'HH:mm:ss.fff'Z' <br />
+    /// yyyy-MM-dd'T'HH:mm:ss.ff'Z' <br />
+    /// yyyy-MM-dd'T'HH:mm:ss.f'Z' <br />
+    /// yyyy-MM-dd'T'HH:mm:ss'Z' <br />
+    /// </code>
+    /// </summary>
     public IsoDateTime(string isoString)
     {
         DateTime dateTimeUnspecified = DateTime.ParseExact(isoString, AllowedIsoFormats, InvariantCulture, DateTimeStyles.AdjustToUniversal);
@@ -33,6 +47,13 @@ public struct IsoDateTime
         return isoDateTime._dateTime;
     }
 
+    /// <summary>
+    /// Converts <see cref="_dateTime"/> to an ISO 8601 string representation in UTC <see cref="DateTimeKind"/>.
+    /// <para>
+    /// Example: 2023-06-14T12:34:56.1234567Z<br />
+    /// Format: yyyy-MM-dd'T'HH:mm:ss.fffffff'Z'
+    /// </para>
+    /// </summary>
     public override string ToString()
     {
         return _dateTime.ToString("o", InvariantCulture);
