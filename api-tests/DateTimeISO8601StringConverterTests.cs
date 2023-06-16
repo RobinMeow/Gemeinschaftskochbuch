@@ -8,29 +8,30 @@ namespace api_tests.entityIdSerializer_specifications;
 public sealed class DateTimeISO8601StringConverterTests
 {
     [Test]
-    [TestCaseSource(nameof(GetValidIsoStrings_Constructed))]
+    [TestCaseSource(nameof(GetValidIsoStrings))]
     [SetCulture("en-US")]
-    public void Convert_ValidIsoString_ReturnsDateTime(string isoString, DateTime expectedDateTime, int expectedOffset)
+    public void Convert_returns_correctly_converted_UTcDateTime_from_valid_IsoString(string isoString, DateTime expectedDateTime, int expectedOffset)
     {
-        DateTime result = DateTimeISO8601StringConverter.Convert(isoString);
-        Assert.That(result, Is.EqualTo(expectedDateTime).Within(TimeSpan.FromTicks(expectedOffset)));
+        DateTime correctlyConvertedUtcDateTime = DateTimeISO8601StringConverter.Convert(isoString);
+        Assert.That(correctlyConvertedUtcDateTime, Is.EqualTo(expectedDateTime).Within(TimeSpan.FromTicks(expectedOffset)));
+        Assert.That(correctlyConvertedUtcDateTime.Kind, Is.EqualTo(expectedDateTime.Kind));
     }
 
     [Test]
-    [TestCaseSource(nameof(GetValidIsoStrings_Constructed))]
+    [TestCaseSource(nameof(GetValidIsoStrings))]
     [SetCulture("zu-ZA")] // South Africa
     public void Convert_ValidIsoString_ReturnsDateTime_zu_ZA(string isoString, DateTime expectedDateTime, int expectedOffset)
-        => Convert_ValidIsoString_ReturnsDateTime(isoString, expectedDateTime, expectedOffset);
+        => Convert_returns_correctly_converted_UTcDateTime_from_valid_IsoString(isoString, expectedDateTime, expectedOffset);
 
     [Test]
-    [TestCaseSource(nameof(GetValidIsoStrings_Constructed))]
+    [TestCaseSource(nameof(GetValidIsoStrings))]
     [SetCulture("ja-JP")] // Japan
     public void Convert_ValidIsoString_ReturnsDateTime_ja_JP(string isoString, DateTime expectedDateTime, int expectedOffset)
-        => Convert_ValidIsoString_ReturnsDateTime(isoString, expectedDateTime, expectedOffset);
+        => Convert_returns_correctly_converted_UTcDateTime_from_valid_IsoString(isoString, expectedDateTime, expectedOffset);
 
-    static IEnumerable<TestCaseData> GetValidIsoStrings_Constructed()
+    /// <summary>Includes a offset, only, because the DateTime constructor does not support smaller milliseconds than 999. Using magic numbers (ticks) in de ctor instead seemed not readable enough for me to keep the precision.</summary>
+    static IEnumerable<TestCaseData> GetValidIsoStrings()
     {
-        // 999 is max millisecond value you can pass in the constrcutor, so we need the offset
         yield return new TestCaseData("2023-06-14T12:34:56.1234567Z", new DateTime(2023, 06, 14, 12, 34, 56, 123, DateTimeKind.Utc), 4567);
         yield return new TestCaseData("2023-06-14T12:34:56.123456Z", new DateTime(2023, 06, 14, 12, 34, 56, 123, DateTimeKind.Utc), 4560);
         yield return new TestCaseData("2023-06-14T12:34:56.12345Z", new DateTime(2023, 06, 14, 12, 34, 56, 123, DateTimeKind.Utc), 4500);

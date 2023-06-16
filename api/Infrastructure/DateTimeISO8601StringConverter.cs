@@ -31,7 +31,8 @@ public static class DateTimeISO8601StringConverter
         // https://stackoverflow.com/questions/12787368/c-sharp-datetime-parse-issue
         // explains that AssumeUniversal returns DateTimeKind Local (the hack? xd) and corrects it if you call ToUniversal()
         // and AdjustToUniversal returns Utc, but "incorrects" the data if you call ToUniversal.
-        return DateTime.ParseExact(dateTimeIsoString, AllowedIsoFormats, InvariantCulture, DateTimeStyles.AdjustToUniversal);
+        DateTime dateTimeUnspecified = DateTime.ParseExact(dateTimeIsoString, AllowedIsoFormats, InvariantCulture, DateTimeStyles.AdjustToUniversal);
+        return DateTime.SpecifyKind(dateTimeUnspecified, DateTimeKind.Utc);
     }
 
     /// <summary>Converts the provided <see cref="DateTime"/> to an ISO 8601 string representation in UTC <see cref="DateTimeKind"/>.</summary>
