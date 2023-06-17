@@ -1,18 +1,16 @@
-using System;
-
 namespace api.Domain;
 
 public abstract class Entity
 {
     public EntityId Id { get; set; } = null!;
 
-    public abstract int ModelVersion { get; set; } // start at zero, so the version is also the amount of times, it was changed :)
+    public abstract int ModelVersion { get; init; } // start at zero, so the version is also the amount of times, it was changed :)
 
-    DateTime _createdAt = DateTime.MinValue.ToUniversalTime();
+    IsoDateTime _createdAt = new IsoDateTime();
 
-    public DateTime CreatedAt
+    public IsoDateTime CreatedAt
     {
         get => _createdAt;
-        set => _createdAt = DateTime.SpecifyKind(value.ToUniversalTime(), DateTimeKind.Utc);
+        set => _createdAt = value;
     }
 }

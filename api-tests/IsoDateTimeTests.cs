@@ -7,16 +7,16 @@ namespace api_tests.IsoDateTime_conversion_tests;
 // this means, it should not contain offsets in strings (not even zero!) and should also be in Utc
 
 [TestFixture]
-public sealed class constrcutor
+public sealed class Constructor
 {
     [Test]
     [TestCaseSource(nameof(_valid_ISO_8601_strings))]
-    public void Constructor_converts_ISO_string_to_DateTime(string isoString, DateTime expected, int expectedOffset)
+    public void Constructor_converts_ISO_string_to_DateTime(string isoString, DateTime expected, int expectedFaultTolerance)
     {
         IsoDateTime isoDateTime = new IsoDateTime(isoString);
         DateTime actual = (DateTime)isoDateTime;
 
-        Assert.That(actual, Is.EqualTo(expected).Within(TimeSpan.FromTicks(expectedOffset)));
+        Assert.That(actual, Is.EqualTo(expected).Within(TimeSpan.FromTicks(expectedFaultTolerance)));
     }
 
     /// <summary>Includes a offset (only!) because the DateTime constructor does not support smaller milliseconds than 999. Using magic numbers (ticks) in the ctor instead seemed not readable enough for me to keep the precision.</summary>
@@ -47,7 +47,7 @@ public sealed class constrcutor
     /// <summary>https://docs.nunit.org/articles/nunit/writing-tests/attributes/culture.html</summary>
     [Test]
     [TestCaseSource(nameof(_valid_ISO_8601_strings))]
-    public void Constructor_converts_ISO_string_to_DateTime_UTC_CultureIndependend(string isoString, DateTime expected, int expectedOffset)
+    public void Constructor_converts_ISO_string_to_DateTime_UTC_CultureIndependend(string isoString, DateTime expected, int expectedFaultTolerance)
     {
         CultureInfo originalCulture = CultureInfo.CurrentCulture;
 
@@ -58,26 +58,13 @@ public sealed class constrcutor
             IsoDateTime isoDateTime = new IsoDateTime(isoString);
             DateTime actual = (DateTime)isoDateTime;
 
-            Assert.That(actual, Is.EqualTo(expected).Within(TimeSpan.FromTicks(expectedOffset)));
+            Assert.That(actual, Is.EqualTo(expected)
+                .Within(TimeSpan.FromTicks(expectedFaultTolerance))
+                .WithSameOffset);
             Assert.That(actual.Kind, Is.EqualTo(DateTimeKind.Utc));
         }
 
         CultureInfo.CurrentCulture = originalCulture;
-    }
-
-    [Test]
-    [TestCase("2023-06-14T12:34:56.1234567Z")]
-    [TestCase("2023-06-14T12:34:56.1234560Z")]
-    [TestCase("2023-06-14T12:34:56.1234500Z")]
-    [TestCase("2023-06-14T12:34:56.1234000Z")]
-    [TestCase("2023-06-14T12:34:56.1230000Z")]
-    [TestCase("2023-06-14T12:34:56.1200000Z")]
-    [TestCase("2023-06-14T12:34:56.1000000Z")]
-    [TestCase("2023-06-14T12:34:56.0000000Z")]
-    public void ToString_returns_valid_iso_string(string iso)
-    {
-        string actual = new IsoDateTime(iso).ToString();
-        Assert.That(actual, Is.EqualTo(iso));
     }
 
     [Test]
@@ -102,5 +89,63 @@ public sealed class constrcutor
     public void Constructor_throws_FormatException_on_invalid_iso_string(string invalidIso)
     {
         Assert.Throws<FormatException>(() => new IsoDateTime(invalidIso));
+    }
+
+    [Test]
+    [TestCaseSource(nameof(_invalid_DateTimeKinds))]
+    public void Constructor_throws_ArgumentException_on_invalid_DateTimeKind(DateTime invalidDate)
+    {
+        Assert.Throws<ArgumentException>(() => new IsoDateTime(invalidDate));
+    }
+
+    static readonly IEnumerable<DateTime> _invalid_DateTimeKinds = new [] {
+        new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Local),
+        new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Unspecified),
+    };
+
+    [Test]
+    [TestCaseSource(nameof(_valid_DateTimes))]
+    public void Constructor_returns_same_DateTime_as_passed_in(DateTime validDate)
+    {
+        DateTime actual = new IsoDateTime(validDate);
+        Assert.That(actual, Is.EqualTo(validDate));
+    }
+
+    static readonly IEnumerable<DateTime> _valid_DateTimes = new [] {
+        new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+        new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+        DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Utc),
+        DateTime.SpecifyKind(DateTime.MinValue, DateTimeKind.Utc),
+        DateTime.SpecifyKind(DateTime.MaxValue, DateTimeKind.Utc),
+    };
+
+    [Test]
+    [TestCase("2023-06-14T12:34:56.1234567Z")]
+    [TestCase("2023-06-14T12:34:56.1234560Z")]
+    [TestCase("2023-06-14T12:34:56.1234500Z")]
+    [TestCase("2023-06-14T12:34:56.1234000Z")]
+    [TestCase("2023-06-14T12:34:56.1230000Z")]
+    [TestCase("2023-06-14T12:34:56.1200000Z")]
+    [TestCase("2023-06-14T12:34:56.1000000Z")]
+    [TestCase("2023-06-14T12:34:56.0000000Z")]
+    public void ToString_returns_valid_iso_string(string iso)
+    {
+        string actual = new IsoDateTime(iso).ToString();
+        Assert.That(actual, Is.EqualTo(iso));
+    }
+
+    [Test]
+    public void Now_returns_current_DateTime()
+    {
+        DateTime actual = IsoDateTime.Now;
+        DateTime utcNow = DateTime.UtcNow;
+        Assert.That(actual, Is.EqualTo(utcNow).Within(TimeSpan.FromMilliseconds(1))); // 1ms is very generous (for my machine). Test succeeded often on 0.01ms
+    }
+
+    [Test]
+    public void Now_returns_Utc()
+    {
+        DateTime actual = IsoDateTime.Now;
+        Assert.That(actual.Kind, Is.EqualTo(DateTimeKind.Utc));
     }
 }

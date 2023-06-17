@@ -32,7 +32,7 @@ public sealed class MongoDbContext : DbContext
         if (!BsonClassMap.IsClassMapRegistered(typeof(Recipe))) // ToDo: Check where this call belongs
         {
             // Serializers (in expectation to have the same lifetime scope as ClassMaps)
-            BsonSerializer.RegisterSerializer(typeof(System.DateTime), new MongoBsonDateTimeSerializer());
+            BsonSerializer.RegisterSerializer(typeof(IsoDateTime), new MongoBsonDateTimeSerializer());
 
             BsonClassMap.RegisterClassMap<Entity>(x => {
                 x.AutoMap(); // EntityId, CreatedAt

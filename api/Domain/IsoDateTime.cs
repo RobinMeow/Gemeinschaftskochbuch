@@ -22,6 +22,12 @@ public struct IsoDateTime
 
     DateTime _dateTime = DateTime.SpecifyKind(DateTime.MinValue, DateTimeKind.Utc);
 
+    public static IsoDateTime Now {
+        get{
+            return new IsoDateTime(DateTime.UtcNow);
+        }
+    }
+
     /// <summary>
     /// Converts the specified string in ISO 8601 format to a <see cref="DateTime"/> with <see cref="DateTimeKind.Utc"/>.
     /// <para>The provided string has to be in a format specified in <see cref="AllowedIsoFormats"/></para>
@@ -42,7 +48,15 @@ public struct IsoDateTime
         _dateTime = DateTime.SpecifyKind(dateTimeUnspecified, DateTimeKind.Utc);
     }
 
-    public static explicit operator DateTime(IsoDateTime isoDateTime)
+    public IsoDateTime(DateTime dateTime)
+    {
+        if (dateTime.Kind != DateTimeKind.Utc)
+            throw new ArgumentException("DateTimeKind has to be in Utc.", nameof(dateTime));
+
+        _dateTime = dateTime;
+    }
+
+    public static implicit operator DateTime(IsoDateTime isoDateTime)
     {
         return isoDateTime._dateTime;
     }

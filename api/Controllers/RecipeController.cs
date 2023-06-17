@@ -49,7 +49,7 @@ public sealed class RecipeController : GkbController
         System.Diagnostics.Debug.Assert(newRecipe.Name != null);
         return new Recipe(){
             Id = EntityId.New(),
-            CreatedAt = DateTime.UtcNow,
+            CreatedAt = IsoDateTime.Now,
             Name = newRecipe.Name!
         };
     }
