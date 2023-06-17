@@ -31,13 +31,16 @@ The projects share the same Git repository for convenience, but they are still d
 
 The Source Code contains a bunch of links, refering to external site, like MSDN or MongoDB. Usually provided as a source for reasonings behind decisions. This should leave the source code (before deployment) at some point and move into the Confluence.
 
-## Contributions
-
-Contributions are currently not being accepted.
-> Contributions will be welcomed once I decide on the copyleft license to use.
-
 ---
 
-> Since a part of my motivation is personal growth through learning various up-to-date technologies that I haven't had experience with. I intend to implement the entire infrastructure as a learning exercise. Additionally, I want to address any unknowns early in the project to avoid getting stuck during development. I point this out, because this does not reflect the way I usually would start a new project.
+## Motivation
+
+> One part is being able to share recipes with my family and friends easily.
+>
+> Another part is personal growth through learning various up-to-date technologies that I haven't had experience with. I intend to implement the entire infrastructure as a learning exercise. Additionally, I want to address any unknowns early in the project to avoid getting stuck during development. I point this out, because this does not reflect the way I usually would start a new project.
 >
 > I might even explore build pipelines using services like Azure or Bitbucket, although the availability of free options is essential for this project.
+
+## License
+
+Gemeinschaftskochbuch is available under the [MIT license](LICENSE).
