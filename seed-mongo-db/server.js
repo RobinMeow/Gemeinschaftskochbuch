@@ -3,7 +3,7 @@ const mongoose = require('mongoose'); // https://mongoosejs.com/docs/populate.ht
 const { Schema } = mongoose;
 
 const { faker } = require('@faker-js/faker'); // https://fakerjs.dev/guide/usage.html
-const uri = "mongodb://localhost:27017/gkb";
+const uri = "mongodb://127.0.0.1:27017/gkb";
 const app = express();
 
 const recipeSchema = Schema({
