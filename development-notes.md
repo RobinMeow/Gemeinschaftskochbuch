@@ -25,9 +25,6 @@ Instructions:
     - `ng new` initializes a git repository. **Delete the `.git` folder.**
     - Keep the `.gitignore` file. It works recursively.
 5. Run `git init`.
-
-> When you use VSCode, all (not ignored) files should now be highlighted in green. (If you don't delete the `.git` folder in the `ui` folder, it will not highlight them and not track them.)
-
 6. Run `git commit -a -m 'Init'`.
     - Then, I created the repository on GitHub, and GitHub showed me 3 commands to execute (add remote as origin, push initial commit, create main branch).
 

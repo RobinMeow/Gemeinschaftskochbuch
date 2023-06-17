@@ -3,13 +3,14 @@
 Welcome to Gemeinschaftskochbuch, a community cookbook project where users can share and explore recipes.
 "Community" as in family and maybe friends, not worldwide.
 
-## Navigation (not ToC)
+## Projects
 
-- [Development Notes](development-notes.md)
-- [api README](api/README.md)
-- [api-tests README](api-tests/README.md)
-- [ui README](ui/README.md)
-- [seed local MongoDB with fake data README](seed-mongo-db/README.md)
+- .NET 7 Web API [api/README](api/README.md)
+- .NET 7 Web API Unit Tests [api-tests/README](api-tests/README.md)
+- Angular [ui/README](ui/README.md)
+- Seeding for local MongoDB [seed-mongo-db/README](seed-mongo-db/README.md)
+
+> [Development Notes](development-notes.md)
 
 ## Requirements
 
