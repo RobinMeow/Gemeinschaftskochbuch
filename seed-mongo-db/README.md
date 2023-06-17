@@ -1,9 +1,15 @@
-# Seeding MongoDB Locally for development
+# Seeding MongoDB Locally for Development
 
-The use will wipe the database called `gkb` and and then build it back up with new (random) data. (actually it doesnt wipe the data yet, I have used the mongosh for this so far)
+The process will wipe the database called `gkb` and rebuild it with new (random) data. (Currently, it doesn't wipe the data)
+I have used mongosh for this so far.
 
-1. run `npm install`
-2. run `node server.js`
-3. close the terminal again when it is fininshed
+Follow these steps:
 
-> The Models need to be kept up2date, but since I'm using only one source control, I can be sneaky and use relative pathing and generate models based on the angular application DTOs to automate the seeding process.
+1. Navigate to `seed-mongo-db` in the terminal
+2. Run `npm install`.
+3. Run `node server.js`.
+4. Close the terminal when it finishes.
+
+> The models need to be kept up-to-date. Since I'm using only one source control. I could be sneaky and use relative pathing to generate models based on the Angular application DTOs, automating the seeding process.
+>
+> This would create a dependency, which I dont think I mind.
