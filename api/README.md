@@ -45,9 +45,14 @@ This "Library" (or folder in this case :D) is literally just a shared module.
 
 When you run `dotnet run`, you can navigate to `http://localhost:5263/Swagger` to test the API without UI.
 
+## Deployment
+
+Replace the `appsettings.template.json` file with our own `appsettings.json` file in your local development environment.
+It contains sensitive informations, like connections strings.
+
 ## ToDo
 
-- Add Unit Tests.
+- ~~Add Unit Tests.~~
 - Make use of Mocking.
 - Implement `UnitOfWork` for transactions (And maybe other things).
 - Add authentication.

@@ -475,3 +475,6 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# Sensetive Information
+appsettings.json
