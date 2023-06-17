@@ -18,7 +18,7 @@ public sealed class BsonIsoDateTimeSerializer : IBsonSerializer<IsoDateTime>
         return new IsoDateTime(iso);
     }
 
-    /// <summary>Serializes a DateTime value to BSON.</summary>
+    /// <summary>Serializes a IsoDateTime value to BSON.</summary>
     public void Serialize(BsonSerializationContext context, BsonSerializationArgs args, IsoDateTime value)
     {
         // MongoDB C# Driver Version (Src: https://github.com/mongodb/mongo-csharp-driver/blob/master/src/MongoDB.Bson/Serialization/Serializers/DateTimeSerializer.cs)
@@ -28,13 +28,13 @@ public sealed class BsonIsoDateTimeSerializer : IBsonSerializer<IsoDateTime>
         context.Writer.WriteString(iso);
     }
 
-    /// <summary>Deserializes a DateTime value from BSON.</summary>
+    /// <summary>Deserializes a IsoDateTime value from BSON.</summary>
     object IBsonSerializer.Deserialize(BsonDeserializationContext context, BsonDeserializationArgs args)
     {
         return Deserialize(context, args);
     }
 
-    /// <summary>Serializes a DateTime value to BSON.</summary>
+    /// <summary>Serializes a IsoDateTime value to BSON.</summary>
     public void Serialize(BsonSerializationContext context, BsonSerializationArgs args, object value)
     {
         if (value is IsoDateTime dateTime)
