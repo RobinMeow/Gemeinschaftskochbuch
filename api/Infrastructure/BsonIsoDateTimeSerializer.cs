@@ -4,7 +4,7 @@ using MongoDB.Bson.Serialization;
 
 namespace api.Infrastructure;
 
-public sealed class MongoBsonDateTimeSerializer : IBsonSerializer<IsoDateTime>
+public sealed class BsonIsoDateTimeSerializer : IBsonSerializer<IsoDateTime>
 {
     public Type ValueType => typeof(IsoDateTime);
 
