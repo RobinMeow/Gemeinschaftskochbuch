@@ -10,7 +10,7 @@ public sealed class Constructor
 {
     [Theory]
     [MemberData(nameof(Get_valid_ISO_8601_strings))]
-    public void Constructor_converts_ISO_string_to_DateTime(string isoString, DateTime expected, int expectedFaultTolerance)
+    public void converts_ISO_string_to_DateTime(string isoString, DateTime expected, int expectedFaultTolerance)
     {
         IsoDateTime isoDateTime = new IsoDateTime(isoString);
         DateTime actual = (DateTime)isoDateTime;
@@ -36,7 +36,7 @@ public sealed class Constructor
     [Theory]
     [InlineData("2023-06-14T12:34:56.1234567Z")]
     [InlineData("2023-06-14T12:34:56Z")]
-    public void Constructor_converts_ISO_string_to_DateTime_UTC(string isoString)
+    public void converts_ISO_string_to_DateTime_UTC(string isoString)
     {
         IsoDateTime isoDateTime = new IsoDateTime(isoString);
         DateTime actual = (DateTime)isoDateTime;
@@ -47,7 +47,7 @@ public sealed class Constructor
     /// <summary>https://docs.nunit.org/articles/nunit/writing-tests/attributes/culture.html</summary>
     [Theory]
     [MemberData(nameof(Get_valid_ISO_8601_strings))]
-    public void Constructor_converts_ISO_string_to_DateTime_UTC_CultureIndependend(string isoString, DateTime expected, int expectedFaultTolerance)
+    public void converts_ISO_string_to_DateTime_UTC_CultureIndependend(string isoString, DateTime expected, int expectedFaultTolerance)
     {
         CultureInfo originalCulture = CultureInfo.CurrentCulture;
 
@@ -67,7 +67,7 @@ public sealed class Constructor
 
     [Theory]
     [InlineData(null)]
-    public void Constructor_throws_ArgumentNullException_on_null(string invalidIso)
+    public void throws_ArgumentNullException_on_null(string invalidIso)
     {
         Assert.Throws<ArgumentNullException>(() => new IsoDateTime(invalidIso));
     }
@@ -84,14 +84,14 @@ public sealed class Constructor
     [InlineData("2023-06-14T12:34:56.123456789Z")] // Excessive fractional seconds
     [InlineData("2023-06-14T12:34:56Z+00:00")] // Offset not allowed in ISO 8601
     [InlineData("2023-06-14T12:34:56.123Z-05:00")] // Offset not allowed in ISO 8601
-    public void Constructor_throws_FormatException_on_invalid_iso_string(string invalidIso)
+    public void throws_FormatException_on_invalid_iso_string(string invalidIso)
     {
         Assert.Throws<FormatException>(() => new IsoDateTime(invalidIso));
     }
 
     [Theory]
     [MemberData(nameof(Get_invalid_DateTimeKinds))]
-    public void Constructor_throws_ArgumentException_on_invalid_DateTimeKind(DateTime invalidDate)
+    public void throws_ArgumentException_on_invalid_DateTimeKind(DateTime invalidDate)
     {
         Assert.Throws<ArgumentException>(() => new IsoDateTime(invalidDate));
     }
@@ -116,35 +116,5 @@ public sealed class Constructor
         yield return new object[] { DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Utc) };
         yield return new object[] { DateTime.SpecifyKind(DateTime.MinValue, DateTimeKind.Utc) };
         yield return new object[] { DateTime.SpecifyKind(DateTime.MaxValue, DateTimeKind.Utc) };
-    }
-
-    [Theory]
-    [InlineData("2023-06-14T12:34:56.1234567Z")]
-    [InlineData("2023-06-14T12:34:56.1234560Z")]
-    [InlineData("2023-06-14T12:34:56.1234500Z")]
-    [InlineData("2023-06-14T12:34:56.1234000Z")]
-    [InlineData("2023-06-14T12:34:56.1230000Z")]
-    [InlineData("2023-06-14T12:34:56.1200000Z")]
-    [InlineData("2023-06-14T12:34:56.1000000Z")]
-    [InlineData("2023-06-14T12:34:56.0000000Z")]
-    public void ToString_returns_valid_iso_string(string iso)
-    {
-        string actual = new IsoDateTime(iso).ToString();
-        Assert.Equal(iso, actual);
-    }
-
-    [Fact]
-    public void Now_returns_current_DateTime()
-    {
-        DateTime actual = IsoDateTime.Now;
-        DateTime utcNow = DateTime.UtcNow;
-        Assert.Equal(utcNow, actual, TimeSpan.FromMilliseconds(1)); // 1ms is very generous (for my machine). Test succeeded often on 0.01ms
-    }
-
-    [Fact]
-    public void Now_returns_Utc()
-    {
-        DateTime actual = IsoDateTime.Now;
-        Assert.Equal(DateTimeKind.Utc, actual.Kind);
     }
 }

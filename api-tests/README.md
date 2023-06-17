@@ -81,3 +81,33 @@ Notes to get started:
 - Common Cases
 - Error Cases
 - Boundary Cases
+
+## Guidelines
+
+- Create a folder per class you test.
+  - Create a class per "Thing" you are testing. A "Thing" can be a method, or a behavior, anything really. Make sure express yourself.
+- Prefer `[InlineData]` (when you can use constants and dont need reuseability) over `[MemberData]`.
+- Prefer `[MemberData]` (when the test data is class scoped, or you need runtime initilization) over `[ClassData]`.
+- Prefer `[ClassData]` when you need to reuse testdata across multiple classes.
+
+The main reason for this unconventional structure is, to make use of tests running in parallel.
+By Default (in xunit 2.x) tests are executed in parallel, per class, using the number of logical processor your device offers.
+(There is currently no way of executing tests in parallel per method)
+
+Exmaple:
+
+- Folder: `EntityId`
+  - `Constrcutor.cs`
+  - `ToString.cs`
+
+> If you need classes to run sequentially (for whatever reason) use the `[Collection("CollecName")]`-Attribute for the two classes and give them the same name.
+>
+> This is subject to change, because I trying out a lot of stuff. (Like swapping from nunit to xunit, ...)
+
+---
+
+> Note: With only `EntityId` and `IsoDateTime` tests the benchmarks performed on avrg. 6ms better after splitting up the classes using 8 logical processors.
+>
+> Means a total of 88 tests performed better in 10 classes (avrg. 42ms), compared to 3 classes (avrg. 47.833ms). (`IsoDateTime` was already split up in 2 classes)
+
+I was thinking, "how much better would this perform on my laptop?", which runs on 16 logical processors. My conclusion was, that it wasnt much faster, because there were only 10 classes, meaning they untilize at max 10 out of 16 possible logical processors xD
