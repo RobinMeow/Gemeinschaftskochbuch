@@ -55,7 +55,7 @@ function fakeRandomRecipe() {
   return {
     _id: faker.string.uuid(), // '4136cd0b-d90b-4af7-b485-5d1ded8db252'
     __v: 0,
-    createdAt: new Date(faker.date.past().toUTCString()).toISOString(), // '2022-07-31T01:33:29.567Z' (ToISO is neccessary, the doc in anytime is a lie)
+    createdAt: new Date(faker.date.past().toUTCString()).toISOString(), // '2022-07-31T01:33:29.567Z' (ToISO is neccessary, the doc in 'past()' is a lie)
     name: faker.commerce.productName(), // 'Incredible Soft Gloves'
   };
 }
