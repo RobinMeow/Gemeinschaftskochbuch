@@ -44,3 +44,11 @@ I might even explore build pipelines using services like Azure or Bitbucket, alt
 ## License
 
 Gemeinschaftskochbuch is available under the [MIT license](LICENSE).
+
+## Contact
+
+Feel free to reach out to me by sending an email to [robinmeow97@gmail.com](mailto:robinmeow97@gmail.com).
+
+If you appreciate my efforts and would like to support me, you can show your appreciation by [buying me a coffee](https://ko-fi.com/ribyn)! ☕️
+
+> Just as Jesus broke bread with his disciples, may you find fellowship and connection in sharing meals, and may your culinary endeavors be a reflection of love and unity.
