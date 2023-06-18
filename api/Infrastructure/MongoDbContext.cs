@@ -37,24 +37,15 @@ public sealed class MongoDbContext : DbContext
             });
         }
 
-        // IDK yet if this is relevant (or how I will use DI or something else to seperate between deployment and local development)
-        // string? connectionString = System.Environment.GetEnvironmentVariable("MONGODB_URI");
-        // if (connectionString == null)
-        // {
-        //     System.Console.WriteLine("You must set your 'MONGODB_URI' environmental variable. See\n\t https://www.mongodb.com/docs/drivers/go/current/usage-examples/#environment-variable");
-        //     System.Environment.Exit(0);
-        // }
         MongoClientSettings settings = MongoClientSettings.FromConnectionString(persistenceSettings.Value.ConnectionString);
         settings.ServerApi = new ServerApi(ServerApiVersion.V1);
-        MongoClient CLIENT = new MongoClient(settings);
+        MongoClient client = new MongoClient(settings);
 
-        string DB_NAME = Globals.ApplicationNameAbbreviated.ToLower();
+        string databaseName = Globals.ApplicationNameAbbreviated.ToLower();
 
-        IMongoDatabase DATABASE = CLIENT.GetDatabase(DB_NAME);
+        IMongoDatabase db = client.GetDatabase(databaseName);
 
-        IMongoCollection<Recipe> RECIPE_COLLECTION = DATABASE.GetCollection<Recipe>(RecipeMongoDbCollection.COLLECTION_NAME);
-
-        RecipeRepository = new RecipeMongoDbCollection(RECIPE_COLLECTION);
+        RecipeRepository = new RecipeMongoDbCollection(db);
     }
 }
 

@@ -7,12 +7,11 @@ namespace api.Infrastructure;
 
 public sealed class RecipeMongoDbCollection : IRecipeRepository
 {
-    public const string COLLECTION_NAME = "recipes";
 	readonly IMongoCollection<Recipe> _collection;
 
-    public RecipeMongoDbCollection(IMongoCollection<Recipe> collection)
+    public RecipeMongoDbCollection(IMongoDatabase database)
     {
-		_collection = collection;
+		_collection = database.GetCollection<Recipe>("recipes");
     }
 
     public async void Add(Recipe recipe)
