@@ -44,13 +44,15 @@ public sealed class MongoDbContext : DbContext
         //     System.Console.WriteLine("You must set your 'MONGODB_URI' environmental variable. See\n\t https://www.mongodb.com/docs/drivers/go/current/usage-examples/#environment-variable");
         //     System.Environment.Exit(0);
         // }
-        MongoClient CLIENT = new MongoClient(persistenceSettings.Value.ConnectionString);
+        MongoClientSettings settings = MongoClientSettings.FromConnectionString(persistenceSettings.Value.ConnectionString);
+        settings.ServerApi = new ServerApi(ServerApiVersion.V1);
+        MongoClient CLIENT = new MongoClient(settings);
+
         string DB_NAME = Globals.ApplicationNameAbbreviated.ToLower();
 
         IMongoDatabase DATABASE = CLIENT.GetDatabase(DB_NAME);
 
         IMongoCollection<Recipe> RECIPE_COLLECTION = DATABASE.GetCollection<Recipe>(RecipeMongoDbCollection.COLLECTION_NAME);
-
 
         RecipeRepository = new RecipeMongoDbCollection(RECIPE_COLLECTION);
     }
