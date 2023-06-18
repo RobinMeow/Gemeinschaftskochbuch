@@ -59,3 +59,14 @@ It contains sensitive informations, like connections strings.
 - Add email service (Firebase is for free, I think).
 - Maybe use Domain Events for some things, like sending emails, but the Application Layer is sufficient for this.
 - For more, [see Requirements](../README.md#requirements)
+
+## Docker
+
+run `docker run -it --rm -p 5263:80 -e ASPNETCORE_ENVIRONMENT=Development imagename`
+`-it` will keep the terminal attached to view the logs.
+`--rm` will remove the container, when the terminal is gracefully terminated.
+`-e` is to set environment varibales.
+`5263` is the port you need to enter in your browser (the port your container is listening to).
+`80` is the port your container will map your request to within.
+
+> Since your local version of mongodb is not within the container, the api will not really work, but you can see the swagger ui. Else if you omit the environment varibale you will reviece a 404 Not Found.

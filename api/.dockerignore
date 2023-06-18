@@ -1,0 +1,3 @@
+# To make your build context as small as possible, add a .dockerignore file to your dotnet-docker folder and copy the following into it.
+**/bin/
+**/obj/
