@@ -483,4 +483,3 @@ out
 appsettings.json
 docker-compose.yaml
 Dockerfile
-Dockerfile.prod
