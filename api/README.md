@@ -61,7 +61,7 @@ I may consider renaming my other template files to follow this convention so tha
 ### Docker
 
 To simplify production deployment using Docker, utilize the `docker-compose.yml` file and execute `docker-compose build` instead of a lengthy `docker run` command.
-Using `docker-compose` instead of `docker build .` is mandatory as the `docker-compose.yml` file contains crucial configuration values such as port mapping and environment variables.
+Using `docker-compose` instead of `docker build .` is mandatory as the `docker-compose.yml` file contains crucial values.
 
 - Copy the `docker-compose.template.yml` file and rename it as `docker-compose.yml` in your local development environment.
 - Replace the sample data in your newly created `docker-compose.yml` file with your own sensitive information.
@@ -70,6 +70,22 @@ The `docker-compose.template.yml` is provided as a replica of the original file,
 
 > Please note that when using the local containerized API version in the development environment, MongoDB will not function at all.
 > This is because the Dockerfile **does not** install MongoDB locally within the container.
+
+Go To Production:
+
+1. Run `docker-compose build` and push your docker image to a public repository (I have used Docker HUB for this application) `docker push username/repositoryname`
+2. Go to Google Cloud Run, create a service.
+3. Enter a Service name. For example, let's name it `gkb-api-service`.
+4. Select a region that is geographically close to your users. I recommend selecting Price Tier 1, if you want to stay free. (This can raise up costs, as google should have pointed out to you already by now. If, and only if you usage is to high, really high. Also I recieved a mail, assuring me, that google will rather than billing me, stop the service, and I still need to upgrade my Billing Acount to be billed.)
+5. Provide the container image URL in the following format: `docker.io/username/repository:latest`.
+6. Ingress control -> `All`
+7. Authentication -> `Allow unauthenticated invocations`. Security is handled through the connection string, which includes a username and password.
+8. Warning: Before clicking "Create," expand the "Container, Networking, Security" panel located above the Create button. Ensure that the container port is set to 8080 (which is the default as of writing this).
+9. Click "Create"
+
+> Note: If you understand the implications and associated costs, you can make additional changes to suit your needs.
+>
+> Important: Your Docker image is now publicly exposed. It is highly recommended to delete the image from the public repository as soon as the Cloud Run service is up and running. Alternatively, you can use Google's Container Registry or Artifact Registry for better security instead of a public Docker Hub.
 
 ## ToDo
 
