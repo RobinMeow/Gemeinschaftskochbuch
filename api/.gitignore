@@ -476,5 +476,11 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# Docker generated
+out
+
 # Sensetive Information
 appsettings.json
+docker-compose.yaml
+Dockerfile
+Dockerfile.prod
