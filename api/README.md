@@ -47,8 +47,29 @@ When you run `dotnet run`, you can navigate to `http://localhost:5263/Swagger` t
 
 ## Deployment
 
-Replace the `appsettings.template.json` file with our own `appsettings.json` file in your local development environment.
-It contains sensitive informations, like connections strings.
+To deploy your API, follow these steps:
+
+- Copy the `appsettings.Template.json` file and rename it as `appsettings.Production.json` in your local development environment.
+- Replace the sample data in the `appsettings.Production.json` file with your own sensitive information.
+
+Initially, I attempted to use `appsettings.json` as the default name and file for my production values. However, this approach caused unexpected issues. The `AllowedOrigins` values became mixed up, and ASP.NET Core included both a local and production URL in a single string array, while the second production URL was missing for unknown reasons. Therefore, I recommend adhering to Microsoft's "recommendation" as mentioned in the [official documentation](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-7.0).
+
+> Take note of how they use capitalization for the words `Staging` and `Development`.
+
+I may consider renaming my other template files to follow this convention so that the entire project aligns with Microsoft's standards. (Can you sense Microsoft's influence and their desire to impose their conventions on you, the way I do? :ape:)
+
+### Docker
+
+To simplify production deployment using Docker, utilize the `docker-compose.yml` file and execute `docker-compose build` instead of a lengthy `docker run` command.
+Using `docker-compose` instead of `docker build .` is mandatory as the `docker-compose.yml` file contains crucial configuration values such as port mapping and environment variables.
+
+- Copy the `docker-compose.template.yml` file and rename it as `docker-compose.yml` in your local development environment.
+- Replace the sample data in your newly created `docker-compose.yml` file with your own sensitive information.
+Remember not to track your newly created file `docker-compose.yml` in your GitHub repository (if you stick to the suggested names, you won't have to do anything, because it is already added in the `.gitignore`).
+The `docker-compose.template.yml` is provided as a replica of the original file, with the sensitive information replaced by example values.
+
+> Please note that when using the local containerized API version in the development environment, MongoDB will not function at all.
+> This is because the Dockerfile **does not** install MongoDB locally within the container.
 
 ## ToDo
 
@@ -59,14 +80,3 @@ It contains sensitive informations, like connections strings.
 - Add email service (Firebase is for free, I think).
 - Maybe use Domain Events for some things, like sending emails, but the Application Layer is sufficient for this.
 - For more, [see Requirements](../README.md#requirements)
-
-## Docker
-
-run `docker run -it --rm -p 5263:80 -e ASPNETCORE_ENVIRONMENT=Development imagename`
-`-it` will keep the terminal attached to view the logs.
-`--rm` will remove the container, when the terminal is gracefully terminated.
-`-e` is to set environment varibales.
-`5263` is the port you need to enter in your browser (the port your container is listening to).
-`80` is the port your container will map your request to within.
-
-> Since your local version of mongodb is not within the container, the api will not really work, but you can see the swagger ui. Else if you omit the environment varibale you will reviece a 404 Not Found.

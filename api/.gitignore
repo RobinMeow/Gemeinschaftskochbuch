@@ -480,6 +480,5 @@ $RECYCLE.BIN/
 out
 
 # Sensetive Information
-appsettings.json
-docker-compose.yaml
-Dockerfile
+appsettings.Production.json
+docker-compose.yml

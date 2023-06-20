@@ -2,6 +2,7 @@ using api.Domain;
 using api.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -22,8 +23,11 @@ internal class Program
         builder.Services.AddSwaggerGen();
 
         builder.Services.AddCors((CorsOptions corsOptions) => {
+            IConfigurationSection corsSettingsSection = builder.Configuration.GetSection(nameof(CorsSettings));
+            string[] allowedOrigins = corsSettingsSection.GetSection(nameof(CorsSettings.AllowedOrigins)).Get<string[]>()!;
+
             corsOptions.AddDefaultPolicy((CorsPolicyBuilder corsPolicyBuilder) => {
-                corsPolicyBuilder.WithOrigins("http://localhost:4200")
+                corsPolicyBuilder.WithOrigins(allowedOrigins)
                 .AllowAnyHeader()
                 .AllowAnyMethod();
             });
@@ -42,8 +46,6 @@ internal class Program
             app.UseSwagger();
             app.UseSwaggerUI();
         }
-        else // prevent warn: Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware[3] Failed to determine the https port for redirect.
-            app.UseHttpsRedirection();
 
         app.UseCors();
         app.UseAuthorization();
