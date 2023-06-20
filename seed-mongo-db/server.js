@@ -1,9 +1,21 @@
 const express = require('express');
 const mongoose = require('mongoose'); // https://mongoosejs.com/docs/populate.html#population
+const yargs = require('yargs');
 const { Schema } = mongoose;
 
+const argv = yargs
+  .option('port', {
+    alias: 'p',
+    description: 'Mongo Port number. 27020 for mongo container port.',
+    type: 'number',
+    default: 27017,
+  })
+  .help()
+  .alias('help', 'h')
+  .argv;
+
 const { faker } = require('@faker-js/faker'); // https://fakerjs.dev/guide/usage.html
-const uri = "mongodb://127.0.0.1:27017/gkb";
+const uri = `mongodb://127.0.0.1:${argv.port}/gkb`;
 const app = express();
 
 const recipeSchema = Schema({
