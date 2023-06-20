@@ -144,6 +144,19 @@
       "args": [
         "./seed-mongo-db/server.js"
       ]
+    },
+    {
+      "label": "seed dockerized mongo db",
+      "command": "node",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": "$jshint",
+      "args": [
+        "./seed-mongo-db/server.js",
+        "-p 27020"
+      ]
     }
   ]
 }
