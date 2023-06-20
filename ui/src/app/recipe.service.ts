@@ -27,7 +27,7 @@ export class RecipeService {
     private _httpClient: HttpClient,
     httpErrorHandler: HttpErrorHandler
     ) {
-    this._api = apiBaseUri + 'Recipe/';
+    this._api = apiBaseUri + '/Recipe/';
     this._handleError = httpErrorHandler.createHandleError('RecipeService');
   }
 
