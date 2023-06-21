@@ -56,7 +56,7 @@ export class AddRecipeComponent {
   protected onAdd(): void {
     if (!this.recipeForm.valid) return;
 
-    const newRecipe: NewRecipe = { // ToDo: This is so terrible, make a seperate Model for creation ..
+    const newRecipe: NewRecipe = {
       name: this.name.value,
     };
 

@@ -10,9 +10,9 @@ import { API_BASE_URI } from './app/app.tokens';
 
 bootstrapApplication(AppComponent, {
     providers: [
-    provideRouter(APP_ROUTES),
-    importProvidersFrom(BrowserAnimationsModule),
-    provideHttpClient(),
-    { provide: API_BASE_URI, useValue: environment.apiBaseUri }
-]
+        provideRouter(APP_ROUTES),
+        importProvidersFrom(BrowserAnimationsModule),
+        provideHttpClient(),
+        { provide: API_BASE_URI, useValue: environment.apiBaseUri }
+    ]
 }).catch(err => console.error(err));
