@@ -15,3 +15,7 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The appli
 ## Notes
 
 Actually, haven't done anything in the front end, except set up a simple text field with reactive forms (which is to be extended once I finish the actual Domain Model) and implement some necessary stuff to test and develop. The whole front-end still needs to be designed and created.
+
+## Deployment
+
+run `ng build --configuration=production`, then `firebase deploy`. Make sure you are logged in, in the correct firebase account `firebase login`, and have the correct firebase project selected. `ng deploy` will not work, because it is not set up (I need to delete all firebase stuff in the ui folder and rerun `firebase init` or so idk, tbh, last time ng deploy was automatically set up).

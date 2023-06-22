@@ -13,3 +13,7 @@ Follow these steps:
 > The models need to be kept up-to-date. Since I'm using only one source control. I could be sneaky and use relative pathing to generate models based on the Angular application DTOs, automating the seeding process.
 >
 > This would create a dependency, which I dont think I mind.
+
+## Deployment
+
+Continuesly running. When a model changes, it should be handeled in the database, for example using Doucment Versioning.

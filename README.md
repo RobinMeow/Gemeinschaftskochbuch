@@ -39,7 +39,7 @@ One part is being able to share recipes with my family and friends easily.
 
 Another part is personal growth through learning various up-to-date technologies that I haven't had experience with. I intend to implement the entire infrastructure as a learning exercise. Additionally, I want to address any unknowns early in the project to avoid getting stuck during development. I point this out, because this does not reflect the way I usually would start a new project.
 
-I might even explore build pipelines using services like Azure or Bitbucket, although the availability of free options is essential for this project.
+I might even explore build pipelines using services like ~~Azure or Bitbucket~~ (most likely) Jenkis, although the availability of free options is essential for this project.
 
 ## License
 
