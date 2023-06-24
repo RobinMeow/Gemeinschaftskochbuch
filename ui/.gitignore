@@ -45,10 +45,10 @@ Thumbs.db
 .idea
 **/node_modules/*
 **/.firebaserc
-
-### Firebase Patch ###
+.firebaserc
+.firebase/**
 .runtimeconfig.json
-.firebase/
+ui-debug.log
 
 # Sensitive Informations
 src/environments/environment.ts

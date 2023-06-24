@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "fireauth-emu": "firebase emulators:start --project=demo-project --only auth"
   },
   "private": true,
   "dependencies": {

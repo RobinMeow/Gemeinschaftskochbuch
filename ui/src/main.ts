@@ -8,7 +8,8 @@ import { provideHttpClient } from '@angular/common/http';
 import { environment } from './environments/environment';
 import { API_BASE_URI, FRONTEND_ORIGINS } from './app/app.tokens';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
-import { getAuth, provideAuth } from '@angular/fire/auth';
+import { connectAuthEmulator, getAuth, provideAuth } from '@angular/fire/auth';
+import { LOG_FAILURE, LOG_SUCCESS } from './macros';
 
 bootstrapApplication(AppComponent, {
     providers: [
@@ -20,8 +21,21 @@ bootstrapApplication(AppComponent, {
 
         importProvidersFrom(
             provideFirebaseApp(() => initializeApp(environment.firebase)),
-            provideAuth(() => getAuth()),
-
+            provideAuth(() => {
+                const auth = getAuth();
+                if (environment.isDevelopment) {
+                    connectAuthEmulator(auth, 'http://localhost:9099', { disableWarnings: true });
+                    fetch('http://localhost:9099', {
+                        mode: 'no-cors'
+                    })
+                    .then(() => LOG_SUCCESS('Firebase Auth Emulator connected at http://localhost:9099 UI: http://127.0.0.1:4000/auth.'))
+                    .catch((reason) => {
+                        LOG_FAILURE(`Firebase Auth Emulator has not been connected. \nPlease run 'npm run fireauth-emu' to start up the Firebase Auth Emulator.`);
+                        throw reason;
+                    });
+                }
+                return auth;
+            }),
         )
     ]
 }).catch(err => console.error(err));
