@@ -482,3 +482,4 @@ out
 # Sensetive Information
 appsettings.Production.json
 docker-compose.yml
+firebase-adminsdk.production.json
