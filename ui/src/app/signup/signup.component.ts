@@ -23,7 +23,9 @@ export class SignupComponent {
 
   private _auth: Auth = inject(Auth);
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(
+    private formBuilder: FormBuilder,
+    ) {
     this.signupForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]]
@@ -39,6 +41,8 @@ export class SignupComponent {
       .then(userCredential => {
         // Signup successful
         console.log(userCredential);
+        // get session token
+
       })
       .catch(error => {
         // Signup failed
