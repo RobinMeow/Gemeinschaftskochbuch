@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -16,7 +15,6 @@ import { NewRecipe } from './NewRecipe';
     ReactiveFormsModule,
     MatInputModule,
     MatButtonModule,
-    HttpClientModule
   ],
   templateUrl: './add-recipe.component.html',
   styleUrls: ['./add-recipe.component.scss']

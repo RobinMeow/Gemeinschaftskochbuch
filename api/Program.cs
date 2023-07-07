@@ -1,5 +1,7 @@
 using api.Domain;
 using api.Infrastructure;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.Extensions.Configuration;
@@ -20,6 +22,13 @@ internal class Program
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
 
+        string sdkpath = builder.Configuration.GetSection("FirebaseAdminSdk").Get<string>()!;
+
+        builder.Services.AddSingleton<IAuthService, FirebaseAuthService>((_) => new FirebaseAuthService(sdkpath));
+
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddScheme<AuthenticationSchemeOptions, FirebaseAuthHandler>(JwtBearerDefaults.AuthenticationScheme, options => {});
+
         builder.Services.AddSwaggerGen();
 
         builder.Services.AddCors((CorsOptions corsOptions) => {
@@ -36,8 +45,7 @@ internal class Program
         // Singleton: instance per 'deploy' (per application lifetime)
         // Scoped: instance per HTTP request
         // Transient: instance per code request.
-        builder.Services.AddScoped<DbContext, MongoDbContext>(); // Apperently its best practise to have it a singleton. I dont see a reason to leave a db connection open for ever. So I stick to scoped. Retrieving a connection from to pool and returning it once per http request seems more reasonable.
-
+        builder.Services.AddScoped<DbContext, MongoDbContext>(); // Apperently its best practise to have it a singleton. I dont see a reason to leave a db connection open for ever. So I stick to scoped. Retrieving a connection from to pool and returning it once per http request seems more reasonable. (I will probably end up changing this later, as soon as I realize, that EFCore uses scoped pool connections internally)
         WebApplication app = builder.Build();
 
         // Configure the HTTP request pipeline.

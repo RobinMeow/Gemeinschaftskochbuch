@@ -4,6 +4,8 @@ import { Auth, createUserWithEmailAndPassword } from '@angular/fire/auth';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { TokenCacheService } from '../token-cache.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-signup',
@@ -24,9 +26,11 @@ export class SignupComponent {
   private _auth: Auth = inject(Auth);
 
   constructor(
-    private formBuilder: FormBuilder,
+    formBuilder: FormBuilder,
+    private _tokenCacheService: TokenCacheService,
+    private _httpClient: HttpClient
     ) {
-    this.signupForm = this.formBuilder.group({
+    this.signupForm = formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
@@ -37,16 +41,25 @@ export class SignupComponent {
 
     const { email, password } = this.signupForm.value;
 
-    createUserWithEmailAndPassword(this._auth, email, password)
-      .then(userCredential => {
-        // Signup successful
-        console.log(userCredential);
-        // get session token
+    createUserWithEmailAndPassword(this._auth, email, password).then(userCredential => {
+      console.log(userCredential);
 
-      })
-      .catch(error => {
-        // Signup failed
+      userCredential.user.getIdToken().then(tokenId => {
+
+        this._tokenCacheService.set(tokenId);
+        console.log("SignedUp and Token recieved. Token: ");
+        console.log(tokenId);
+
+        this._httpClient.get<any>('http://localhost:5263/Recipe/Test')
+        .subscribe(okResult => {
+          console.log(okResult);
+        }); // req auth
+
+      }).catch(error => {
         console.error(error);
       });
+    }).catch(error => {
+        console.error(error);
+    });
   }
 }
