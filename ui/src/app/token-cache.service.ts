@@ -13,7 +13,7 @@ export class TokenCacheService {
     localStorage.setItem(this.tokenKey, token);
   }
 
-  public clearToken(): void {
+  public clear(): void {
     localStorage.removeItem(this.tokenKey);
   }
 }
