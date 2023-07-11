@@ -1,4 +1,8 @@
-<ng-container *ngIf="hasAccount == null">
-    <button mat-raised-button color="primary" (click)="redirectToSignup()">Account erstellen</button>
-    <button mat-raised-button color="primary" (click)="redirectToLogin()">Einloggen</button>
-</ng-container>
+<div class="home-wrapper">
+	<ng-container *ngIf="hasAccount == null">
+		<button mat-raised-button color="primary" (click)="redirectToSignup()">Account erstellen</button>
+		<br>
+		<br>
+		<button mat-raised-button color="primary" (click)="redirectToLogin()">Einloggen</button>
+	</ng-container>
+</div>
