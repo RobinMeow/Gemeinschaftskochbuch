@@ -8,7 +8,6 @@ import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 })
 export class AuthService implements OnDestroy {
 
-
   private _user$: Observable<User | null> = user(this._auth);
   private _userSubscription: Subscription;
   // private isLoggedIn = new BehaviorSubject(false);
@@ -27,6 +26,7 @@ export class AuthService implements OnDestroy {
   }
 
   isSignedIn (): boolean {
+    console.warn("ToDo: verify the token (f.g. if it has expired).");
     return this._tokenCacheService.tryGet() != null;
   }
 
