@@ -2,7 +2,9 @@ using Google.Apis.Auth.OAuth2;
 using FirebaseAdmin;
 using FirebaseAdmin.Auth;
 using System.Threading.Tasks;
-using System.Collections.Generic;
+using api.Domain;
+
+namespace api.Infrastructure;
 
 public sealed class FirebaseAuthService : IAuthService
 {
@@ -19,8 +21,11 @@ public sealed class FirebaseAuthService : IAuthService
         _firebaseAuth = FirebaseAuth.DefaultInstance;
     }
 
-    public async Task<IReadOnlyDictionary<string, object>?> VerifyIdTokenAsync(string idtoken)
+    public async Task<VerifiedToken> VerifyIdTokenAsync(string idtoken)
     {
-        return (await _firebaseAuth.VerifyIdTokenAsync(idtoken))?.Claims;
+        // What the VerifyIdTokenAsync ensures: https://firebase.google.com/docs/auth/admin/verify-id-tokens#c
+        FirebaseToken firebaseToken = await _firebaseAuth.VerifyIdTokenAsync(idtoken);
+        var verifiedToken = new VerifiedToken(firebaseToken.Claims);
+        return verifiedToken;
     }
 }

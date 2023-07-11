@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using api.Domain;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Logging;
@@ -42,13 +43,11 @@ public sealed class FirebaseAuthHandler : AuthenticationHandler<AuthenticationSc
                 ? authorization.Substring("Bearer ".Length)
                 : authorization;
 
-            IReadOnlyDictionary<string, object>? claims = await _firebaseAuthService.VerifyIdTokenAsync(tokenId);
-
-            if (claims == null)
-                return AuthenticateResult.Fail("Invalid idtoken");
+            VerifiedToken verifiedToken = await _firebaseAuthService.VerifyIdTokenAsync(tokenId);
+            List<Claim> claimsRequiredForTheApplication = new List<Claim>();
 
             return AuthenticateResult.Success(new AuthenticationTicket(new ClaimsPrincipal(new List<ClaimsIdentity>(){
-                new ClaimsIdentity(ToClaims(claims), nameof(FirebaseAuthHandler))
+                new ClaimsIdentity(claimsRequiredForTheApplication, nameof(FirebaseAuthHandler))
             }), JwtBearerDefaults.AuthenticationScheme));
         }
         catch (Exception ex)
@@ -56,13 +55,5 @@ public sealed class FirebaseAuthHandler : AuthenticationHandler<AuthenticationSc
             Logger.LogError($"{ex.Message}\n{ex.StackTrace}");
             return AuthenticateResult.Fail(ex);
         }
-    }
-
-    IEnumerable<Claim>? ToClaims(IReadOnlyDictionary<string, object> claims)
-    {
-        return new List<Claim>(){
-            new Claim("id", claims["user_id"].ToString()!),
-            new Claim("email", claims["email"].ToString()!),
-        };
     }
 }

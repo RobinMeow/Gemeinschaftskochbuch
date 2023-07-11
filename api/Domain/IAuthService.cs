@@ -1,7 +1,8 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
+namespace api.Domain;
 public interface IAuthService
 {
-    Task<IReadOnlyDictionary<string, object>?> VerifyIdTokenAsync(string idtoken);
+    /// <summary>ensures that the token is correctly signed, has not expired</summary>
+    Task<VerifiedToken> VerifyIdTokenAsync(string idtoken);
 }
