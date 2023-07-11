@@ -14,8 +14,13 @@ public sealed class FirebaseAuthHandler : AuthenticationHandler<AuthenticationSc
 {
     readonly IAuthService _firebaseAuthService;
 
-    public FirebaseAuthHandler(IOptionsMonitor<JwtBearerOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock, IAuthService firebaseAuthService)
-        : base(options, logger, encoder, clock)
+    public FirebaseAuthHandler(
+        IOptionsMonitor<JwtBearerOptions> options,
+        ILoggerFactory logger,
+        UrlEncoder encoder,
+        ISystemClock clock,
+        IAuthService firebaseAuthService
+        ) : base(options, logger, encoder, clock)
     {
         _firebaseAuthService = firebaseAuthService;
     }
@@ -27,12 +32,14 @@ public sealed class FirebaseAuthHandler : AuthenticationHandler<AuthenticationSc
 
         string? authorization = Request.Headers["Authorization"];
 
-        if (string.IsNullOrWhiteSpace(authorization)) // Bearer eyGibberisch...
+        if (string.IsNullOrWhiteSpace(authorization))
             return AuthenticateResult.Fail("Invalid token");
 
         try
         {
-            string tokenId = authorization.StartsWith("Bearer ") ? authorization.Substring("Bearer ".Length) : authorization;
+            string tokenId = authorization.StartsWith("Bearer ")
+                ? authorization.Substring("Bearer ".Length)
+                : authorization;
 
             IReadOnlyDictionary<string, object>? claims = await _firebaseAuthService.VerifyIdTokenAsync(tokenId);
 
