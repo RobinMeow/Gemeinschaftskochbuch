@@ -1,4 +1,5 @@
 
+using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
@@ -50,8 +51,9 @@ public sealed class FirebaseAuthHandler : AuthenticationHandler<AuthenticationSc
                 new ClaimsIdentity(ToClaims(claims), nameof(FirebaseAuthHandler))
             }), JwtBearerDefaults.AuthenticationScheme));
         }
-        catch (System.Exception ex)
+        catch (Exception ex)
         {
+            Logger.LogError($"{ex.Message}\n{ex.StackTrace}");
             return AuthenticateResult.Fail(ex);
         }
     }
