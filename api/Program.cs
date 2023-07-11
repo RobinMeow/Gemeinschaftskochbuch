@@ -58,10 +58,10 @@ static class ProgrammExtensions
 {
     public static IServiceCollection AddFrontEndOriginsCors(this WebApplicationBuilder builder)
     {
-        return builder.Services.AddCors((CorsOptions corsOptions) => {
-            IConfigurationSection corsSettingsSection = builder.Configuration.GetSection(nameof(CorsSettings));
-            string[] allowedOrigins = corsSettingsSection.GetSection(nameof(CorsSettings.AllowedOrigins)).Get<string[]>()!;
+        IConfigurationSection corsSettingsSection = builder.Configuration.GetSection(nameof(CorsSettings));
+        string[] allowedOrigins = corsSettingsSection.GetSection(nameof(CorsSettings.AllowedOrigins)).Get<string[]>()!;
 
+        return builder.Services.AddCors((CorsOptions corsOptions) => {
             corsOptions.AddDefaultPolicy((CorsPolicyBuilder corsPolicyBuilder) => {
                 corsPolicyBuilder.WithOrigins(allowedOrigins)
                 .AllowAnyHeader()
