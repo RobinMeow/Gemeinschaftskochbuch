@@ -2,19 +2,24 @@ import { Routes } from '@angular/router';
 
 export const APP_ROUTES: Routes = [
     {
-        path: '/',
+        path: '',
         loadComponent: () => import('src/app/home/home.component').then(c => c.HomeComponent),
         title: 'Kochbuch'
     },
     {
-        path: '/home',
+        path: 'home',
         loadComponent: () => import('src/app/home/home.component').then(c => c.HomeComponent),
         title: 'Kochbuch'
     },
     {
-        path: '/signin',
-        loadComponent: () => import('src/app/login/login.component').then(c => c.LoginComponent),
-        title: 'Einloggen / Registrieren'
+        path: 'signin',
+        loadComponent: () => import('src/app/sign-in/sign-in.component').then(c => c.SignInComponent),
+        title: 'Einloggen'
+    },
+    {
+        path: 'signup',
+        loadComponent: () => import('src/app/sign-up/sign-up.component').then(c => c.SignUpComponent),
+        title: 'Registrieren'
     },
     {
         path: '**',
