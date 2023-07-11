@@ -1,0 +1,21 @@
+<form *ngIf="!loggedIn" [formGroup]="loginForm" (ngSubmit)="login()">
+
+	<mat-form-field>
+		<input matInput formControlName="email" placeholder="Email">
+		<mat-error *ngIf="loginForm.get('email')?.hasError('required')">Email is required</mat-error>
+		<mat-error *ngIf="loginForm.get('email')?.hasError('email')">Invalid email format</mat-error>
+	</mat-form-field>
+
+	<mat-form-field>
+		<input matInput formControlName="password" type="password" placeholder="Password">
+		<mat-error *ngIf="loginForm.get('password')?.hasError('required')">Password is required</mat-error>
+		<mat-error *ngIf="loginForm.get('password')?.hasError('minlength')">Password should be at least 6 characters long</mat-error>
+	</mat-form-field>
+
+	<button (click)="login()">Login</button>
+</form>
+
+<div *ngIf="loggedIn">
+	<h2>Welcome, {{ (user$ | async) }}!</h2>
+	<button (click)="logout()">Logout</button>
+</div>
