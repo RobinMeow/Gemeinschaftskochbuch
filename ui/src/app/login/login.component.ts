@@ -1,12 +1,13 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
-import { Auth, User, UserCredential, signInWithEmailAndPassword, signOut, user } from '@angular/fire/auth';
-import { Subscription } from 'rxjs';
+// import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { AuthService } from '../auth.service';
+import { FirebaseError } from '@angular/fire/app';
+import { Router } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-login',
@@ -15,58 +16,101 @@ import { MatInputModule } from '@angular/material/input';
     CommonModule,
     ReactiveFormsModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    MatButtonModule
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
-
   protected loginForm: FormGroup;
-
-  private _auth: Auth = inject(Auth);
-  user$ = user(this._auth);
-  userSubscription: Subscription;
-  protected loggedIn: boolean = false;
+  hasAccount: boolean | null = null;
 
   constructor(
-    private router: Router,
-    private http: HttpClient,
+    private _router: Router,
+    private _authService: AuthService,
     formBuilder: FormBuilder
   ) {
-    this.userSubscription = this.user$.subscribe((aUser: User | null) => {
-      //handle user state changes here. Note, that user will be null if there is no currently logged in user.
-      this.loggedIn = !!aUser;
-    });
+    if (false) // prevent loop, cuz this component is in home rn
+      if (this._authService.isSignedIn()) {
+        _router.navigateByUrl('/');
+        console.log('Already signed in. Redirect to home.');
+      }
+
     this.loginForm = formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
 
-  login() {
-    if (this.loginForm.invalid) return;
+  showLogin(){
+    this.hasAccount = true;
+  }
 
-    const { email, password } = this.loginForm.value;
+  showSignup(){
+    this.hasAccount = false;
+  }
 
-    signInWithEmailAndPassword(this._auth, email, password)
-      .then((credentials: UserCredential) => {
-        return credentials.user.getIdToken();
-      })
-      .then((idToken: string) => {
-        // return this.http.post('/api/auth/login', { token: idToken }).toPromise();
-      })
+  async signup() {
+    try {
+      if (this.loginForm.invalid) return;
+
+      const { email, password } = this.loginForm.value;
+
+      await this._authService.signup(email, password)
       .then(() => {
-        // this.router.navigate(['/']);
+        this.hasAccount = false;
       })
-      .catch((error: any) => {
-        console.error('Error logging in:', error);
+      .catch(err => {
+        const errMsg: string = JSON.stringify(err);
+        const emailAlreadyInUse: boolean = errMsg.indexOf('auth/email-already-in-use') != -1;
+
+        if (emailAlreadyInUse) {
+          console.warn('Email existiert bereits.');
+        }
+        else {
+          console.error(err);
+        }
       });
+    }
+    catch (error) {
+      console.error(error);
+    }
+  }
+
+  async login() {
+    try {
+      if (this.loginForm.invalid) return;
+
+      const { email, password } = this.loginForm.value;
+
+      await this._authService.login(email, password)
+      .then(() => {
+      })
+      .catch((error) => {
+        const errorMessage: string = JSON.stringify(error);;
+        const userNotFound: boolean = errorMessage.indexOf('auth/user-not-found') != -1;
+        const wrongPassword: boolean = errorMessage.indexOf('auth/wrong-password') != -1;
+
+        if (userNotFound)
+          console.log("Benutzer existiert nicht.");
+        else if (wrongPassword)
+          console.log("Falsches Passwort.");
+        else
+          console.log(error);
+          // ToDo: Feedback, Falscher Benutzername oder Password, oder nicht registriert
+      });
+    }
+    catch (error) {
+      if (typeof(error) == typeof(FirebaseError)) {
+        console.error("Wrong Password.");
+      }
+      else
+        console.error(error);
+    }
   }
 
   logout() {
-    signOut(this._auth).then(() => {
-      // this.router.navigate(['/login']);
-    });
+    this._authService.logout();
   }
 }
