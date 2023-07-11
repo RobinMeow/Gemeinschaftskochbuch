@@ -23,7 +23,6 @@ internal class Program
         builder.Services.AddEndpointsApiExplorer();
 
         string sdkpath = builder.Configuration.GetSection("FirebaseAdminSdk").Get<string>()!;
-
         builder.Services.AddSingleton<IAuthService, FirebaseAuthService>((System.IServiceProvider _) => new FirebaseAuthService(sdkpath));
 
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -31,21 +30,13 @@ internal class Program
 
         builder.Services.AddSwaggerGen();
 
-        builder.Services.AddCors((CorsOptions corsOptions) => {
-            IConfigurationSection corsSettingsSection = builder.Configuration.GetSection(nameof(CorsSettings));
-            string[] allowedOrigins = corsSettingsSection.GetSection(nameof(CorsSettings.AllowedOrigins)).Get<string[]>()!;
-
-            corsOptions.AddDefaultPolicy((CorsPolicyBuilder corsPolicyBuilder) => {
-                corsPolicyBuilder.WithOrigins(allowedOrigins)
-                .AllowAnyHeader()
-                .AllowAnyMethod();
-            });
-        });
+        builder.AddFrontEndOriginsCors();
 
         // Singleton: instance per 'deploy' (per application lifetime)
         // Scoped: instance per HTTP request
         // Transient: instance per code request.
         builder.Services.AddScoped<DbContext, MongoDbContext>(); // Apperently its best practise to have it a singleton. I dont see a reason to leave a db connection open for ever. So I stick to scoped. Retrieving a connection from to pool and returning it once per http request seems more reasonable. (I will probably end up changing this later, as soon as I realize, that EFCore uses scoped pool connections internally)
+
         WebApplication app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -60,5 +51,22 @@ internal class Program
         app.MapControllers();
 
         app.Run();
+    }
+}
+
+static class ProgrammExtensions
+{
+    public static IServiceCollection AddFrontEndOriginsCors(this WebApplicationBuilder builder)
+    {
+        return builder.Services.AddCors((CorsOptions corsOptions) => {
+            IConfigurationSection corsSettingsSection = builder.Configuration.GetSection(nameof(CorsSettings));
+            string[] allowedOrigins = corsSettingsSection.GetSection(nameof(CorsSettings.AllowedOrigins)).Get<string[]>()!;
+
+            corsOptions.AddDefaultPolicy((CorsPolicyBuilder corsPolicyBuilder) => {
+                corsPolicyBuilder.WithOrigins(allowedOrigins)
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+            });
+        });
     }
 }
