@@ -24,7 +24,7 @@ internal class Program
 
         string sdkpath = builder.Configuration.GetSection("FirebaseAdminSdk").Get<string>()!;
 
-        builder.Services.AddSingleton<IAuthService, FirebaseAuthService>((_) => new FirebaseAuthService(sdkpath));
+        builder.Services.AddSingleton<IAuthService, FirebaseAuthService>((System.IServiceProvider _) => new FirebaseAuthService(sdkpath));
 
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddScheme<AuthenticationSchemeOptions, FirebaseAuthHandler>(JwtBearerDefaults.AuthenticationScheme, options => {});
