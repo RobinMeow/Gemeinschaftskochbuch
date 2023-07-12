@@ -7,12 +7,9 @@ public sealed class IsDisallowedId
     [Fact]
     public void returns_true_for_disallowed_ids()
     {
-        foreach (string disallowedId in EntityId.DisallowedIds)
-        {
-            bool isDisallowed = EntityId.IsDisallowedId(disallowedId);
-
-            Assert.True(isDisallowed);
-        }
+        Parallel.ForEach(EntityId.DisallowedIds, (disallowedId) => {
+            Assert.True(EntityId.IsDisallowedId(disallowedId));
+        });
     }
 
     [Fact]

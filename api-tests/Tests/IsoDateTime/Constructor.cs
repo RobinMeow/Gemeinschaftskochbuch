@@ -51,16 +51,13 @@ public sealed class Constructor
     {
         CultureInfo originalCulture = CultureInfo.CurrentCulture;
 
-        foreach (CultureInfo culture in CultureInfo.GetCultures(CultureTypes.AllCultures))
-        {
-            CultureInfo.CurrentCulture = culture;
-
+        Parallel.ForEach(CultureInfo.GetCultures(CultureTypes.AllCultures), (culture) => {
             IsoDateTime isoDateTime = new IsoDateTime(isoString);
             DateTime actual = (DateTime)isoDateTime;
 
             Assert.Equal(expected, actual, TimeSpan.FromTicks(expectedFaultTolerance));
             Assert.Equal(DateTimeKind.Utc, actual.Kind);
-        }
+        });
 
         CultureInfo.CurrentCulture = originalCulture;
     }

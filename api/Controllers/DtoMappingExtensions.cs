@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 using api.Domain;
 
 namespace api.Controllers;
@@ -16,8 +16,15 @@ public static class DtoMappingExtensions
         };
     }
 
-    public static IEnumerable<RecipeDto> ToDto(this IEnumerable<Recipe> recipe)
+    public static IEnumerable<RecipeDto> ToDto(this IEnumerable<Recipe> recipes)
     {
-        return recipe.Select(recipe => recipe.ToDto());
+        ICollection<RecipeDto> list = new List<RecipeDto>();
+
+        Parallel.ForEach(recipes, (recipe) =>
+        {
+            list.Add(recipe.ToDto());
+        });
+
+        return list;
     }
 }
