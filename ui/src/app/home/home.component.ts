@@ -4,6 +4,7 @@ import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { Subscription } from 'rxjs';
+import { NoahsKitchen } from '../NoahsKitchen';
 
 @Component({
   selector: 'app-home',
@@ -17,7 +18,7 @@ import { Subscription } from 'rxjs';
 })
 export class HomeComponent implements OnDestroy {
 
-  protected hasAccount: boolean | null = null; // null = unknown
+  protected NoahsKitchen = NoahsKitchen;
 
   protected isAuthenticated: boolean = false;
   private _sub: Subscription;
