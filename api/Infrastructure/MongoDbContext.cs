@@ -13,27 +13,24 @@ public sealed class MongoDbContext : DbContext
     public MongoDbContext(IOptions<PersistenceSettings> persistenceSettings)
     : base()
     {
-        const string __v = "__v";
-        const string _id = "_id";
-
-        ConventionPack camelCaseConvention = new ConventionPack { new CamelCaseElementNameConvention() };
-        ConventionRegistry.Register("CamelCase", camelCaseConvention, type => true);
+        ConventionPack camelCaseConvention = new ConventionPack {
+            new CamelCaseElementNameConvention()
+        };
+        ConventionRegistry.Register("CamelCase", camelCaseConvention, (System.Type type) => true);
 
         if (!BsonClassMap.IsClassMapRegistered(typeof(Recipe))) // ToDo: Check where this call belongs
         {
-            // Serializers (in expectation to have the same lifetime scope as ClassMaps)
-            BsonSerializer.RegisterSerializer(typeof(IsoDateTime), new BsonIsoDateTimeSerializer());
+            BsonSerializer.RegisterSerializer(typeof(IsoDateTime), new BsonIsoDateTimeSerializer()); // Serializers (in expectation to have the same lifetime scope as ClassMaps)
 
             BsonClassMap.RegisterClassMap<Entity>(x => {
-                x.AutoMap(); // EntityId, CreatedAt
-                x.MapMember(entity => entity.ModelVersion).SetElementName(__v);
-                x.MapMember(x => x.Id).SetElementName(_id).SetSerializer(new EntityIdSerializer());
+                x.AutoMap();
+                x.MapMember(entity => entity.ModelVersion).SetElementName("__v");
+                x.MapMember(x => x.Id).SetElementName("_id").SetSerializer(new EntityIdSerializer());
             });
 
             BsonClassMap.RegisterClassMap<Recipe>(x => {
                 x.SetDiscriminator(nameof(Entity));
                 x.AutoMap();
-                // x.GetMemberMap(x => x.Erstelldatum).SetSerializer()
             });
         }
 
