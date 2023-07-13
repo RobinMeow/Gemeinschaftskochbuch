@@ -17,3 +17,9 @@
 .menu {
     padding: 0;
 }
+
+@media(max-width: 600px){
+    .menu {
+        width: 100%;
+    }
+}

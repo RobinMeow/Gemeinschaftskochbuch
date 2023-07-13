@@ -1,0 +1,17 @@
+@import '/node_modules/@angular/material/toolbar/toolbar-variables';
+
+.close-menu-flex {
+    display: flex;
+    box-sizing: border-box;
+    padding: 0 16px;
+    width: 100%;
+    flex-direction: row-reverse;
+    align-items: center;
+    white-space: nowrap;
+
+    height: $mat-toolbar-height-mobile;
+
+    @media(min-width: 600px){
+        height: $mat-toolbar-height-desktop;
+    }
+}
