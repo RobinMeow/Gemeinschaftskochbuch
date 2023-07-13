@@ -6,6 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '../auth.service';
 import { PasswordComponent } from '../password/password.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sign-in',
@@ -26,7 +27,8 @@ export class SignInComponent {
 
   constructor(
     private _authService: AuthService,
-    formBuilder: FormBuilder
+    formBuilder: FormBuilder,
+    private _router: Router
   ) {
     this.form = formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
@@ -39,8 +41,9 @@ export class SignInComponent {
 
       const { email, password } = this.form.value;
 
-      await this._authService.login(email, password)
+      await this._authService.signin(email, password)
       .then(() => {
+        this._router.navigateByUrl('');
       })
       .catch((error) => {
         const errorMessage: string = JSON.stringify(error);;

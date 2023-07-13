@@ -1,8 +1,14 @@
 <div class="home-wrapper">
-	<ng-container *ngIf="hasAccount == null">
+	<ng-container *ngIf="!isAuthenticated">
 		<button mat-raised-button color="primary" (click)="redirectToSignup()">Account erstellen</button>
 		<br>
 		<br>
 		<button mat-raised-button color="primary" (click)="redirectToLogin()">Einloggen</button>
 	</ng-container>
+
+	<ng-container *ngIf="isAuthenticated">
+		<h2>Hi, this is Home!</h2>
+		<button mat-raised-button color="primary" (click)="logout()">Ausloggen</button>
+	</ng-container>
+
 </div>
