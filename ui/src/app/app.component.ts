@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { NgSwitch, NgSwitchDefault, NgSwitchCase } from '@angular/common';
 import { AddRecipeComponent } from './add-recipe/add-recipe.component';
 import { HomeComponent } from './home/home.component';
+import { HeaderComponent } from './header/header.component';
+import { MenuComponent } from './menu/menu.component';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +18,10 @@ import { HomeComponent } from './home/home.component';
     NgSwitchCase,
     RouterOutlet,
     AddRecipeComponent,
-    HomeComponent
+    HomeComponent,
+    HeaderComponent,
+    MenuComponent,
+    MatSidenavModule
   ]
 })
 export class AppComponent {
