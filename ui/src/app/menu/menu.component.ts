@@ -1,11 +1,9 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatDrawer } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { Subscription } from 'rxjs';
-import { AuthService } from '../auth.service';
-import { Router } from '@angular/router';
+import { AuthCornerComponent } from './auth-corner/auth-corner.component';
+import { MatDrawer } from '@angular/material/sidenav';
 
 @Component({
   selector: 'app-menu',
@@ -13,40 +11,14 @@ import { Router } from '@angular/router';
   imports: [
     CommonModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    AuthCornerComponent
   ],
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.scss']
 })
-export class MenuComponent implements OnDestroy {
-  private _sub: Subscription;
+export class MenuComponent {
 
-  protected isAuthenticated: boolean = false;
   @Input() drawer!: MatDrawer;
-
-  constructor(
-    protected _authService: AuthService,
-    private _router: Router
-  ) {
-    this._sub = this._authService.isAuthenticated$.subscribe((isAuthed) => {
-      this.isAuthenticated = isAuthed;
-    });
-  }
-
-  redirectToSignup() {
-    this._router.navigateByUrl('/signup');
-  }
-
-  redirectToLogin() {
-    this._router.navigateByUrl('/signin');
-  }
-
-  async logout() {
-    await this._authService.logout();
-  }
-
-  ngOnDestroy(): void {
-    this._sub.unsubscribe();
-  }
 
 }
