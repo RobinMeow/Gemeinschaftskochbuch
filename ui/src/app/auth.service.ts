@@ -8,8 +8,7 @@ import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 export class AuthService implements OnDestroy {
 
   private _user$: Observable<User | null> = user(this._auth);
-  private _userSubscription: Subscription;
-
+  private _onAuthStateChangd: Subscription;
   private _isAuthenticated = new BehaviorSubject(false);
 
   get isAuthenticated$(): Observable<boolean> {
@@ -20,7 +19,7 @@ export class AuthService implements OnDestroy {
     private _auth: Auth /* _auth is stateful and carries all data, for example, whether or not, a user is currently logged in. */
   )
   {
-    this._userSubscription = this._user$.subscribe((currentUser: User | null) => {
+    this._onAuthStateChangd = this._user$.subscribe((currentUser: User | null) => {
       this._isAuthenticated.next(currentUser != null);
     });
   }
@@ -39,6 +38,6 @@ export class AuthService implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this._userSubscription.unsubscribe();
+    this._onAuthStateChangd.unsubscribe();
   }
 }
