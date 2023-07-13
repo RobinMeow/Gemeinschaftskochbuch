@@ -37,6 +37,10 @@ export class AuthService implements OnDestroy {
     await signOut(this._auth);
   }
 
+  async tryGetToken(): Promise<string | undefined> {
+    return await this._auth.currentUser?.getIdToken();
+  }
+
   ngOnDestroy(): void {
     this._onAuthStateChangd.unsubscribe();
   }
