@@ -1,14 +1,3 @@
 <div class="home-wrapper">
-	<ng-container *ngIf="!isAuthenticated">
-		<button mat-raised-button color="primary" (click)="redirectToSignup()">Account erstellen</button>
-		<br>
-		<br>
-		<button mat-raised-button color="primary" (click)="redirectToLogin()">Einloggen</button>
-	</ng-container>
-
-	<ng-container *ngIf="isAuthenticated">
-		<p>{{ NoahsKitchen.description }}</p>
-		<button mat-raised-button color="primary" (click)="logout()">Ausloggen</button>
-	</ng-container>
-
+	<p>{{ NoahsKitchen.description }}</p>
 </div>

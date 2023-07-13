@@ -16,37 +16,12 @@ import { NoahsKitchen } from '../NoahsKitchen';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnDestroy {
+export class HomeComponent {
 
   protected NoahsKitchen = NoahsKitchen;
 
-  protected isAuthenticated: boolean = false;
-  private _sub: Subscription;
 
   constructor(
-    protected _authService: AuthService,
-    private _router: Router
   ) {
-    // redirect to login, when not authenticated.
-    this._sub = this._authService.isAuthenticated$.subscribe((isAuthed) => {
-      console.log('is authed: '+ isAuthed);
-      this.isAuthenticated = isAuthed;
-    });
-  }
-
-  redirectToSignup() {
-    this._router.navigateByUrl('/signup');
-  }
-
-  redirectToLogin() {
-    this._router.navigateByUrl('/signin');
-  }
-
-  async logout() {
-    await this._authService.logout();
-  }
-
-  ngOnDestroy(): void {
-    this._sub.unsubscribe();
   }
 }

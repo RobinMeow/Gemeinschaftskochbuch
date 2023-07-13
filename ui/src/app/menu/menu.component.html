@@ -1,5 +1,14 @@
-<div class="close-menu-flex">
-    <button mat-icon-button (click)="drawer.toggle()">
-        <mat-icon fontIcon="arrow_back"></mat-icon>
-    </button>
+<div class="menu-wrapper">
+    <div class="close-menu-flex">
+        <button mat-icon-button (click)="drawer.toggle()">
+            <mat-icon fontIcon="arrow_back"></mat-icon>
+        </button>
+    </div>
+    <div class="auth-corner">
+        <ng-container *ngIf="!isAuthenticated">
+            <button mat-flat-button color="accent" (click)="redirectToSignup()">Account erstellen</button>
+            <button mat-raised-button color="accent" (click)="redirectToLogin()">Einloggen</button>
+        </ng-container>
+        <button *ngIf="isAuthenticated" mat-stroked-button color="accent" (click)="logout()">Ausloggen</button>
+    </div>
 </div>
