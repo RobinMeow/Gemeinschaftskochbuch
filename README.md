@@ -31,6 +31,9 @@ The projects share the same Git repository for convenience, but they are still d
 
 The Source Code contains a bunch of links, refering to external site, like MSDN or MongoDB. Usually provided as a source for reasonings behind decisions. This should leave the source code (before deployment) at some point and move into the Confluence.
 
+Keep all commits you do, always prefer fast-forward merge into dev. Only merge dev into main, using squash, forming a single commit describing the change.
+Keep the commit references in the commit message (they refer to the commit hashes in dev).
+
 ---
 
 ## Motivation
