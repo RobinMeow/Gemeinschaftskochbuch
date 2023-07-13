@@ -10,12 +10,10 @@ import { API_BASE_URI, FRONTEND_ORIGINS } from './app/app.tokens';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { connectAuthEmulator, getAuth, provideAuth } from '@angular/fire/auth';
 import { LOG_FAILURE, LOG_SUCCESS } from './macros';
-import { TokenCacheService } from './app/token-cache.service';
 import { TokenInterceptor } from './app/token.interceptor';
 
 bootstrapApplication(AppComponent, {
     providers: [
-        TokenCacheService,
         { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
         provideHttpClient(withInterceptorsFromDi()),
 
