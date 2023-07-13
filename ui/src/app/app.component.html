@@ -1,1 +1,13 @@
-<router-outlet></router-outlet>
+<mat-drawer-container class="wrapper" autosize>
+
+    <mat-drawer #drawer class="menu" mode="side" opened="true">
+        <app-menu [drawer]="drawer"></app-menu>
+    </mat-drawer>
+
+    <app-header [drawer]="drawer"></app-header>
+
+    <div class="set-min-height">
+        <router-outlet></router-outlet>
+    </div>
+
+</mat-drawer-container>

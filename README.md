@@ -1,4 +1,4 @@
-# Gemeinschaftskochbuch
+# Noah's Kitchen (Subject to change)
 
 Welcome to Gemeinschaftskochbuch, a community cookbook project where users can share and explore recipes within a specific community (e.g., family and friends).
 
