@@ -1,11 +1,18 @@
-/* You can add global styles to this file, and also import other style files */
-
-html, 
-body { 
-    height: 100%; 
+* {
+    box-sizing: border-box;
 }
 
-body { 
-    margin: 0; 
-    font-family: Roboto, "Helvetica Neue", sans-serif; 
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.mat-mdc-button-touch-target{ // the touch / clickable zone for a button
+    // some guy at angular introduced a fixed height which was supposed to inherit. This is the bugfix
+    height: inherit !important;
 }

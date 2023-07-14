@@ -1,10 +1,19 @@
 @import '/node_modules/@angular/material/toolbar/toolbar-variables';
 
+.menu-wrapper {
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    flex-direction: column;
+    min-width: 250px;
+}
+
 .close-menu-flex {
     display: flex;
-    box-sizing: border-box;
     padding: 0 16px;
     width: 100%;
+    box-sizing: border-box;
     flex-direction: row-reverse;
     align-items: center;
     white-space: nowrap;
