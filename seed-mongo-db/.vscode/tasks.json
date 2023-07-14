@@ -1,0 +1,32 @@
+{
+	// See https://go.microsoft.com/fwlink/?LinkId=733558
+	// for the documentation about the tasks.json format
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "seed mongo db",
+			"command": "node",
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			},
+			"problemMatcher": "$jshint",
+			"args": [
+				"./seed-mongo-db/server.js"
+			]
+		},
+		{
+			"label": "seed dockerized mongo db",
+			"command": "node",
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			},
+			"problemMatcher": "$jshint",
+			"args": [
+				"./seed-mongo-db/server.js",
+				"-p 27020"
+			]
+		}
+	]
+}

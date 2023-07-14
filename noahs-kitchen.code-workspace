@@ -1,0 +1,32 @@
+{
+  "folders": [
+
+    {
+      "path": ".git"
+    },
+    {
+      "path": "ui"
+    },
+    {
+      "path": "api"
+    },
+    {
+      "path": "api-tests"
+    },
+    {
+      "path": "seed-mongo-db"
+    },
+    {
+      "path": "./"
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "api/": true,
+      "api-tests/": true,
+      "ui/": true,
+      "seed-mongo-db/": true,
+      ".git/": true,
+    }
+  }
+}
