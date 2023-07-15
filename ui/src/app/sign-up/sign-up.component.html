@@ -1,9 +1,14 @@
 <form [formGroup]="form" (ngSubmit)="signup()">
 
     <mat-form-field>
+        <input matInput formControlName="chefname" placeholder="Chefkoch">
+        <mat-error *ngIf="form.get('chefname')?.hasError('required')">Name ist ein Pflichtfeld</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
         <input matInput formControlName="email" placeholder="Email">
-        <mat-error *ngIf="form.get('email')?.hasError('required')">Email is required</mat-error>
-        <mat-error *ngIf="form.get('email')?.hasError('email')">Invalid email format</mat-error>
+        <mat-error *ngIf="form.get('email')?.hasError('required')">Email ist ein Pflichtfeld</mat-error>
+        <mat-error *ngIf="form.get('email')?.hasError('email')">Ungültiges format</mat-error>
     </mat-form-field>
 
     <br>

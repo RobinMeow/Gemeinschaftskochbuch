@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '../auth.service';
 import { PasswordComponent } from '../password/password.component';
 import { Router } from '@angular/router';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-sign-up',
@@ -28,10 +29,12 @@ export class SignUpComponent {
   constructor(
     private _authService: AuthService,
     formBuilder: FormBuilder,
-    private _router: Router
+    private _router: Router,
+    private _userService: UserService
   ) {
     this.form = formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
+      chefname: ['', [Validators.required, Validators.maxLength(20), Validators.minLength(3)]],
     });
   }
 
@@ -39,17 +42,18 @@ export class SignUpComponent {
     try {
       if (this.form.invalid) return;
 
-      const { email, password } = this.form.value;
+      const { email, password, chefname } = this.form.value;
 
       await this._authService.signup(email, password)
       .then(() => {
         this._router.navigateByUrl('');
+        this._userService.setUsername(email, chefname);
       })
       .catch(err => {
         const errMsg: string = JSON.stringify(err);
-        const emailAlreadyInUse: boolean = errMsg.indexOf('auth/email-already-in-use') != -1;
+        const isEmailAlreadyInUse: boolean = errMsg.indexOf('auth/email-already-in-use') != -1;
 
-        if (emailAlreadyInUse) {
+        if (isEmailAlreadyInUse) {
           console.warn('Email existiert bereits.');
         }
         else {
