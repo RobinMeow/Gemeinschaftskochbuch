@@ -7,7 +7,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '../auth.service';
 import { PasswordComponent } from '../password/password.component';
 import { Router } from '@angular/router';
-import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-sign-up',
@@ -30,7 +29,6 @@ export class SignUpComponent {
     private _authService: AuthService,
     formBuilder: FormBuilder,
     private _router: Router,
-    private _userService: UserService
   ) {
     this.form = formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
@@ -44,10 +42,9 @@ export class SignUpComponent {
 
       const { email, password, chefname } = this.form.value;
 
-      await this._authService.signup(email, password)
+      await this._authService.signup(chefname, email, password)
       .then(() => {
         this._router.navigateByUrl('');
-        this._userService.setUsername(email, chefname);
       })
       .catch(err => {
         const errMsg: string = JSON.stringify(err);

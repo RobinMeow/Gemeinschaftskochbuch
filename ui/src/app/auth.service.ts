@@ -1,6 +1,8 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Inject, Injectable, OnDestroy } from '@angular/core';
 import { Auth, User, UserCredential, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, user } from '@angular/fire/auth';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { API_BASE_URI } from './app.tokens';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -10,23 +12,38 @@ export class AuthService implements OnDestroy {
   private _user$: Observable<User | null> = user(this._auth);
   private _onAuthStateChangd: Subscription;
   private _isAuthenticated = new BehaviorSubject(false);
+  private _httpOptions: { headers: HttpHeaders; };
+  private _api: string;
 
   get isAuthenticated$(): Observable<boolean> {
     return this._isAuthenticated.asObservable();
   }
 
   constructor(
-    private _auth: Auth /* _auth is stateful and carries all data, for example, whether or not, a user is currently logged in. */
+    private _auth: Auth, /* _auth is stateful and carries all data, for example, whether or not, a user is currently logged in. */
+    @Inject(API_BASE_URI) apiBaseUri: string,
+    private _httpClient: HttpClient,
   )
   {
     this._onAuthStateChangd = this._user$.subscribe((currentUser: User | null) => {
       this._isAuthenticated.next(currentUser != null);
     });
+    this._api = apiBaseUri + '/Auth/';
+
+    this._httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      })
+    };
   }
 
   // On successful creation of the user account, this user will also be signed in to your application.
-  async signup(email: string, password: string): Promise<void> {
+  async signup(chefname: string, email: string, password: string): Promise<void> {
     const userCredential: UserCredential = await createUserWithEmailAndPassword(this._auth, email, password);
+
+    // email and uid are read from claim
+
+    this._httpClient.post<any>(this._api + 'SignUp', chefname, this._httpOptions);
   }
 
   async signin(email: string, password: string): Promise<void> {
