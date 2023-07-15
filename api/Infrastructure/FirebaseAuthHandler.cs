@@ -44,7 +44,14 @@ public sealed class FirebaseAuthHandler : AuthenticationHandler<AuthenticationSc
                 : authorization;
 
             VerifiedToken verifiedToken = await _firebaseAuthService.VerifyIdTokenAsync(tokenId);
-            List<Claim> claimsRequiredForTheApplication = new List<Claim>();
+            List<Claim> claimsRequiredForTheApplication = new List<Claim>(){
+                new Claim(AuthClaims.Types.Email, verifiedToken.Claims["email"].ToString()!),
+                new Claim(AuthClaims.Types.UserId, verifiedToken.Claims["user_id"].ToString()!),
+                new Claim(AuthClaims.Types.EmailVerified, verifiedToken.Claims["email_verified"].ToString()!),
+                // ToDo: I think, Authtime should be read out here, once, checked and return auth fail
+                // new Claim(AuthTime, verifiedToken.Claims["auth_time"].ToString()!),
+
+            };
 
             return AuthenticateResult.Success(new AuthenticationTicket(new ClaimsPrincipal(new List<ClaimsIdentity>(){
                 new ClaimsIdentity(claimsRequiredForTheApplication, nameof(FirebaseAuthHandler))

@@ -1,3 +1,4 @@
+using api.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,11 +10,17 @@ public sealed class AuthController : GkbController
 {
     [HttpPost(nameof(SignUp))]
     [Authorize]
-    public IActionResult SignUp([FromBody] string chefname)
+    public IActionResult SignUp(string chefname)
     {
         // validate username, and check for existing ones.
         // read email and userid from claim
         // write into database
-        return Ok();
+
+        var authClaims = new AuthClaims(HttpContext.User);
+
+        return Ok(new {
+            email = authClaims.Email,
+            uid = authClaims.UserId
+        });
     }
 }

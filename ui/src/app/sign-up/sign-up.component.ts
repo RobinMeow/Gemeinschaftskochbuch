@@ -32,7 +32,6 @@ export class SignUpComponent {
   ) {
     this.form = formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
-      chefname: ['', [Validators.required, Validators.maxLength(20), Validators.minLength(3)]],
     });
   }
 
@@ -40,9 +39,9 @@ export class SignUpComponent {
     try {
       if (this.form.invalid) return;
 
-      const { email, password, chefname } = this.form.value;
+      const { email, password } = this.form.value;
 
-      await this._authService.signup(chefname, email, password)
+      await this._authService.signup(email, password)
       .then(() => {
         this._router.navigateByUrl('');
       })

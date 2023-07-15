@@ -1,11 +1,11 @@
 <form [formGroup]="form" (ngSubmit)="signup()">
 
-    <mat-form-field>
+    <!-- <mat-form-field>
         <input matInput formControlName="chefname" placeholder="Chefkoch">
         <mat-error *ngIf="form.get('chefname')?.hasError('required')">Pflichtfeld</mat-error>
         <mat-error *ngIf="form.get('chefname')?.hasError('maxLength')">max. 20 Zeichen</mat-error>
         <mat-error *ngIf="form.get('chefname')?.hasError('minLength')">mind. 3 Zeichen</mat-error>
-    </mat-form-field>
+    </mat-form-field> -->
 
     <mat-form-field>
         <input matInput formControlName="email" placeholder="Email">
