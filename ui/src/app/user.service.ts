@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { API_BASE_URI } from './app.tokens';
+import { Auth } from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,7 @@ export class UserService {
   constructor(
     @Inject(API_BASE_URI) apiBaseUri: string,
     private _httpClient: HttpClient,
+    private _auth: Auth
   ) {
     this._api = apiBaseUri + '/User/';
 
@@ -23,7 +25,12 @@ export class UserService {
   }
 
   setUsername(email: string, chefname: string) {
-    return this._httpClient.post<any>(this._api + 'setChefname', { email, chefname }, this._httpOptions);
+    const user = this._auth.currentUser;
+
+    if (!user)
+      throw new Error('User not authenticated.');
+
+    return this._httpClient.post<any>(this._api + 'setChefname', { userId: user.uid, email, chefname }, this._httpOptions);
   }
 
 }
