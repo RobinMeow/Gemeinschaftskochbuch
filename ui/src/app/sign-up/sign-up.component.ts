@@ -38,6 +38,13 @@ export class SignUpComponent {
     formBuilder: FormBuilder,
     private _router: Router,
   ) {
+    _authService.isAuthenticated$.subscribe((isAuthed) => {
+      if (isAuthed) {
+        _router.navigateByUrl('');
+        return;
+      }
+    });
+
     this.accountForm = formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
     });
