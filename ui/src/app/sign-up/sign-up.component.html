@@ -2,12 +2,14 @@
 
     <mat-form-field>
         <input matInput formControlName="chefname" placeholder="Chefkoch">
-        <mat-error *ngIf="form.get('chefname')?.hasError('required')">Name ist ein Pflichtfeld</mat-error>
+        <mat-error *ngIf="form.get('chefname')?.hasError('required')">Pflichtfeld</mat-error>
+        <mat-error *ngIf="form.get('chefname')?.hasError('maxLength')">max. 20 Zeichen</mat-error>
+        <mat-error *ngIf="form.get('chefname')?.hasError('minLength')">mind. 3 Zeichen</mat-error>
     </mat-form-field>
 
     <mat-form-field>
         <input matInput formControlName="email" placeholder="Email">
-        <mat-error *ngIf="form.get('email')?.hasError('required')">Email ist ein Pflichtfeld</mat-error>
+        <mat-error *ngIf="form.get('email')?.hasError('required')">Pflichtfeld</mat-error>
         <mat-error *ngIf="form.get('email')?.hasError('email')">Ungültiges format</mat-error>
     </mat-form-field>
 
