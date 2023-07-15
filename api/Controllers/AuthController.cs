@@ -8,9 +8,9 @@ namespace api.Controllers;
 [Route("[controller]")]
 public sealed class AuthController : GkbController
 {
-    [HttpPost(nameof(SignUp))]
+    [HttpPost(nameof(ChooseChefname))]
     [Authorize]
-    public IActionResult SignUp(string chefname)
+    public IActionResult ChooseChefname(string chefname)
     {
         // validate username, and check for existing ones.
         // read email and userid from claim

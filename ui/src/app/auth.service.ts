@@ -33,7 +33,7 @@ export class AuthService implements OnDestroy {
     const userCredential: UserCredential = await createUserWithEmailAndPassword(this._auth, email, password);
   }
 
-  setChefname(chefname: string): void {
+  chooseChefname(chefname: string): Observable<any> {
     const httpOptions: { headers: HttpHeaders; } = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -41,10 +41,9 @@ export class AuthService implements OnDestroy {
     };
 
     // email and uid are read from claim
-    const url = this._apiBaseUri + '/Auth/SignUp?chefname=' + chefname;
+    const url = this._apiBaseUri + '/Auth/ChooseChefname?chefname=' + chefname;
 
-    const post = this._httpClient.post<any>(url, httpOptions);
-    post.subscribe();
+    return this._httpClient.post<any>(url, httpOptions);
   }
 
   async signin(email: string, password: string): Promise<void> {

@@ -20,8 +20,8 @@ export class TokenInterceptor implements HttpInterceptor {
     // we cant use await here, without changing the function signature.
     // so we transform the Promise into an Observable,
     // and merge it with the returning Observable
-    const getTokenAsync: Promise<string | undefined> = this._auth.tryGetToken();
-    const workaroundAwait: Observable<string | undefined> = from(getTokenAsync);
+    const tryGetTokenAsync: Promise<string | undefined> = this._auth.tryGetToken();
+    const workaroundAwait: Observable<string | undefined> = from(tryGetTokenAsync);
 
     return workaroundAwait.pipe(
       mergeMap(token => {

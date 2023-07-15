@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -7,6 +7,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '../auth.service';
 import { PasswordComponent } from '../password/password.component';
 import { Router } from '@angular/router';
+import { MatStepper, MatStepperModule } from '@angular/material/stepper';
+import { Observable, catchError, of } from 'rxjs';
+import { ApiNotification } from '../common/ApiNotification';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-sign-up',
@@ -17,33 +21,40 @@ import { Router } from '@angular/router';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    PasswordComponent
+    PasswordComponent,
+    MatStepperModule
   ],
   templateUrl: './sign-up.component.html',
   styleUrls: ['./sign-up.component.scss']
 })
 export class SignUpComponent {
-  form: FormGroup;
+  accountForm: FormGroup;
+  chefnameForm: FormGroup;
+
+  @ViewChild('stepper') private _stepper!: MatStepper;
 
   constructor(
     private _authService: AuthService,
     formBuilder: FormBuilder,
     private _router: Router,
   ) {
-    this.form = formBuilder.group({
+    this.accountForm = formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
+    });
+    this.chefnameForm = formBuilder.group({
+      chefname: [ '', [Validators.required, Validators.minLength(3), Validators.maxLength(20)] ],
     });
   }
 
   async signup() {
     try {
-      if (this.form.invalid) return;
+      if (this.accountForm.invalid) return;
 
-      const { email, password } = this.form.value;
+      const { email, password } = this.accountForm.value;
 
       await this._authService.signup(email, password)
       .then(() => {
-        this._router.navigateByUrl('');
+        this._stepper.next();
       })
       .catch(err => {
         const errMsg: string = JSON.stringify(err);
@@ -60,5 +71,30 @@ export class SignUpComponent {
     catch (error) {
       console.error(error);
     }
+  }
+
+  submitChefname(){
+    if (this.chefnameForm.invalid) return;
+
+    const { chefname } = this.chefnameForm.value;
+    const unkownError = undefined;
+
+    this._authService.chooseChefname(chefname)
+    .pipe(
+      catchError((err: HttpErrorResponse, caught: Observable<any>) => {
+        console.error(err.message, err);
+        return of(unkownError);
+      })
+    ).subscribe((response: HttpResponse<ApiNotification> | undefined)=> {
+      if (response === unkownError)
+        return;
+
+      if (response.ok) {
+        this._stepper.next();
+      }
+      else {
+        console.log(response.body?.notifications);
+      }
+    });
   }
 }
