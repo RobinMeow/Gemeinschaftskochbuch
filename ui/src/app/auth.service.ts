@@ -10,7 +10,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 export class AuthService implements OnDestroy {
 
   private _user$: Observable<User | null> = user(this._auth);
-  private _onAuthStateChangd: Subscription;
+  private _onAuthStateChanged: Subscription;
   private _isAuthenticated = new BehaviorSubject(false);
 
   get isAuthenticated$(): Observable<boolean> {
@@ -23,7 +23,7 @@ export class AuthService implements OnDestroy {
     private _httpClient: HttpClient,
   )
   {
-    this._onAuthStateChangd = this._user$.subscribe((currentUser: User | null) => {
+    this._onAuthStateChanged = this._user$.subscribe((currentUser: User | null) => {
       this._isAuthenticated.next(currentUser != null);
     });
   }
@@ -59,6 +59,6 @@ export class AuthService implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this._onAuthStateChangd.unsubscribe();
+    this._onAuthStateChanged.unsubscribe();
   }
 }

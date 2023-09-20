@@ -6,7 +6,7 @@ public abstract class _testData
 {
     public static IEnumerable<object[]> GetDisallowedIds()
     {
-        foreach (string disallowedId in EntityId.DisallowedIds)
+        foreach (string disallowedId in GuidEntityIdSpecification.DisallowedIds)
             yield return new [] { disallowedId };
     }
 

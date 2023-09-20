@@ -42,8 +42,12 @@ public sealed class FirebaseAuthHandler : AuthenticationHandler<AuthenticationSc
             string tokenId = authorization.StartsWith("Bearer ")
                 ? authorization.Substring("Bearer ".Length)
                 : authorization;
-
+            // https://firebase.google.com/docs/auth/admin/verify-id-tokens
             VerifiedToken verifiedToken = await _firebaseAuthService.VerifyIdTokenAsync(tokenId);
+
+            if (verifiedToken.HasExpired())
+                return AuthenticateResult.Fail("Token has expired.");
+
             List<Claim> claimsRequiredForTheApplication = new List<Claim>(){
                 new Claim(AuthClaims.Types.Email, verifiedToken.Claims["email"].ToString()!),
                 new Claim(AuthClaims.Types.UserId, verifiedToken.Claims["user_id"].ToString()!),

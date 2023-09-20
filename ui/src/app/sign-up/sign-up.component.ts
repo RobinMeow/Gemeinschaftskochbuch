@@ -8,7 +8,7 @@ import { AuthService } from '../auth.service';
 import { PasswordComponent } from '../password/password.component';
 import { Router } from '@angular/router';
 import { MatStepper, MatStepperModule } from '@angular/material/stepper';
-import { Observable, catchError, of } from 'rxjs';
+import { Observable, catchError, first, of } from 'rxjs';
 import { ApiNotification } from '../common/ApiNotification';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 
@@ -38,7 +38,7 @@ export class SignUpComponent {
     formBuilder: FormBuilder,
     private _router: Router,
   ) {
-    _authService.isAuthenticated$.subscribe((isAuthed) => {
+    _authService.isAuthenticated$.pipe(first()).subscribe((isAuthed) => {
       if (isAuthed) {
         _router.navigateByUrl('');
         return;
@@ -65,7 +65,7 @@ export class SignUpComponent {
       })
       .catch(err => {
         const errMsg: string = JSON.stringify(err);
-        const isEmailAlreadyInUse: boolean = errMsg.indexOf('auth/email-already-in-use') != -1;
+        const isEmailAlreadyInUse: boolean = errMsg.indexOf('auth/email-already-in-use') != -1; // ToDo: Use Async Validator instead
 
         if (isEmailAlreadyInUse) {
           console.warn('Email existiert bereits.');
@@ -92,7 +92,9 @@ export class SignUpComponent {
         console.error(err.message, err);
         return of(unkownError);
       })
-    ).subscribe((response: HttpResponse<ApiNotification> | undefined)=> {
+    ).subscribe((response: HttpResponse<any> | undefined)=> {
+      console.log(response);
+
       if (response === unkownError)
         return;
 
@@ -100,7 +102,7 @@ export class SignUpComponent {
         this._stepper.next();
       }
       else {
-        console.log(response.body?.notifications);
+        console.log(response.body?.notifications ?? 'Keine Fehler.');
       }
     });
   }
