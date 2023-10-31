@@ -1,50 +1,56 @@
 <div class="signup-wrapper">
-	<mat-vertical-stepper [linear]="false" animationDuration="1000" #stepper>
-		<!-- ToDo: You can skip a step. You can spam click. -->
-		<!-- Email, Password -->
-		<mat-step [stepControl]="accountForm">
-			<ng-template matStepLabel>Account erstellen</ng-template>
+	<form [formGroup]="signUpForm">
+		<mat-vertical-stepper [linear]="false" animationDuration="1000" #stepper>
+			<!-- ToDo: You can skip a step. You can spam click. -->
+			<!-- Email, Password -->
+			<mat-step [stepControl]="signUpForm.controls.email || signUpForm.controls.password">
+				<ng-template matStepLabel>Account erstellen</ng-template>
 
-			<form [formGroup]="accountForm">
+
+					<mat-form-field>
+						<input matInput formControlName="email" placeholder="Email" required>
+						<mat-error *ngIf="signUpForm.controls.email.hasError('required')">Pflichtfeld</mat-error>
+						<mat-error *ngIf="signUpForm.controls.email.hasError('email')">Ungültiges format</mat-error>
+					</mat-form-field>
+					<br>
+
+					<mat-form-field>
+						<input matInput [formControl]="signUpForm.controls.password" type="password" required>
+						<mat-error *ngIf="signUpForm.controls.password.hasError('required')">Pflichtfeld</mat-error>
+						<mat-error *ngIf="signUpForm.controls.password.hasError('minlength')">Mind. 6 Zeichen</mat-error>
+					</mat-form-field>
+					<br>
+
+					<button mat-raised-button
+						color="primary"
+						type="submit"
+						(click)="signup()"
+						[disabled]="signUpForm.controls.email.invalid || signUpForm.controls.password.invalid">Registrieren</button>
+			</mat-step>
+
+			<!-- Name -->
+			<mat-step [stepControl]="signUpForm.controls.chefname">
+				<ng-template matStepLabel>Koch - Nickname</ng-template>
 
 				<mat-form-field>
-					<input matInput formControlName="email" placeholder="Email" required>
-					<mat-error *ngIf="accountForm.get('email')?.hasError('required')">Pflichtfeld</mat-error>
-					<mat-error *ngIf="accountForm.get('email')?.hasError('email')">Ungültiges format</mat-error>
+					<input matInput [formControl]="signUpForm.controls.chefname" placeholder="Chefkoch" required>
+					<mat-error *ngIf="signUpForm.controls.chefname.hasError('required')">Pflichtfeld</mat-error>
+					<mat-error *ngIf="signUpForm.controls.chefname.hasError('maxLength')">max. 20 Zeichen</mat-error>
+					<mat-error *ngIf="signUpForm.controls.chefname.hasError('minLength')">mind. 3 Zeichen</mat-error>
 				</mat-form-field>
-				<br>
 
-				<app-password [authForm]="accountForm"></app-password>
-				<br>
+				<button mat-raised-button (click)="submitChefname()" [disabled]="signUpForm.controls.chefname.invalid">Weiter</button>
+			</mat-step>
 
-				<button mat-raised-button color="primary" (click)="signup()" [disabled]="accountForm.invalid">Registrieren</button>
-			</form>
-		</mat-step>
+			<!-- Email Bestätigen -->
+			<mat-step>
+				<ng-template matStepLabel>Email Bestätigung</ng-template>
+				Bitte bestätige deine Email innerhalb von 7 Tagen.
+				<div>
+					<button mat-button>Finish (Not yet impl)</button>
+				</div>
+			</mat-step>
 
-		<!-- Name -->
-		<mat-step [stepControl]="chefnameForm">
-			<ng-template matStepLabel>Koch - Nickname</ng-template>
-
-			<form [formGroup]="chefnameForm">
-				<mat-form-field>
-					<input matInput formControlName="chefname" placeholder="Chefkoch" required>
-					<mat-error *ngIf="chefnameForm.get('chefname')?.hasError('required')">Pflichtfeld</mat-error>
-					<mat-error *ngIf="chefnameForm.get('chefname')?.hasError('maxLength')">max. 20 Zeichen</mat-error>
-					<mat-error *ngIf="chefnameForm.get('chefname')?.hasError('minLength')">mind. 3 Zeichen</mat-error>
-				</mat-form-field>
-			</form>
-
-			<button mat-raised-button (click)="submitChefname()" [disabled]="chefnameForm.invalid">Weiter</button>
-		</mat-step>
-
-		<!-- Email Bestätigen -->
-		<mat-step>
-			<ng-template matStepLabel>Email Bestätigung</ng-template>
-			Bitte bestätige deine Email innerhalb von 7 Tagen.
-			<div>
-				<button mat-button>Finish (Not yet impl)</button>
-			</div>
-		</mat-step>
-
-	</mat-vertical-stepper>
+		</mat-vertical-stepper>
+	</form>
 </div>

@@ -1,11 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '../auth.service';
-import { PasswordComponent } from '../password/password.component';
 import { Router } from '@angular/router';
 
 @Component({
@@ -17,29 +16,26 @@ import { Router } from '@angular/router';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    PasswordComponent
   ],
   templateUrl: './sign-in.component.html',
   styleUrls: ['./sign-in.component.scss']
 })
 export class SignInComponent {
-  form: FormGroup;
+  private readonly _authService = inject(AuthService);
+  private readonly _router = inject(Router);
+  private readonly _nnfb = inject(NonNullableFormBuilder);
 
-  constructor(
-    private _authService: AuthService,
-    formBuilder: FormBuilder,
-    private _router: Router
-  ) {
-    this.form = formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
-    });
-  }
+  protected readonly signInForm = this._nnfb.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, Validators.minLength(6)]],
+  });
 
   async login() {
     try {
-      if (this.form.invalid) return;
+      if (this.signInForm.invalid) return;
 
-      const { email, password } = this.form.value;
+      const email: string = this.signInForm.controls.email.value;
+      const password: string = this.signInForm.controls.password.value;
 
       await this._authService.signin(email, password)
       .then(() => {

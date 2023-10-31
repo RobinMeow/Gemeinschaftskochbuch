@@ -1,15 +1,13 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormGroup, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '../auth.service';
-import { PasswordComponent } from '../password/password.component';
 import { Router } from '@angular/router';
 import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { Observable, catchError, first, of } from 'rxjs';
-import { ApiNotification } from '../common/ApiNotification';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 
 @Component({
@@ -21,43 +19,41 @@ import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    PasswordComponent,
     MatStepperModule
   ],
   templateUrl: './sign-up.component.html',
   styleUrls: ['./sign-up.component.scss']
 })
-export class SignUpComponent {
-  accountForm: FormGroup;
-  chefnameForm: FormGroup;
+export class SignUpComponent implements OnInit {
+  private readonly _authService = inject(AuthService);
+  private readonly _router = inject(Router);
+  private readonly _nnfb = inject(NonNullableFormBuilder);
+
+
+  protected readonly signUpForm = this._nnfb.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, Validators.minLength(6)]],
+    chefname: [ '', [Validators.required, Validators.minLength(3), Validators.maxLength(20)] ],
+  });
 
   @ViewChild('stepper') private _stepper!: MatStepper;
 
-  constructor(
-    private _authService: AuthService,
-    formBuilder: FormBuilder,
-    private _router: Router,
-  ) {
-    _authService.isAuthenticated$.pipe(first()).subscribe((isAuthed) => {
+  ngOnInit(): void {
+    this._authService.isAuthenticated$.pipe(first()).subscribe((isAuthed) => {
       if (isAuthed) {
-        _router.navigateByUrl('');
+        this._router.navigateByUrl('');
         return;
       }
-    });
-
-    this.accountForm = formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
-    });
-    this.chefnameForm = formBuilder.group({
-      chefname: [ '', [Validators.required, Validators.minLength(3), Validators.maxLength(20)] ],
     });
   }
 
   async signup() {
     try {
-      if (this.accountForm.invalid) return;
+      if (this.signUpForm.controls.email.invalid || this.signUpForm.controls.password.invalid)
+        return;
 
-      const { email, password } = this.accountForm.value;
+      const email: string = this.signUpForm.controls.email.value;
+      const password: string = this.signUpForm.controls.password.value;
 
       await this._authService.signup(email, password)
       .then(() => {
@@ -81,9 +77,9 @@ export class SignUpComponent {
   }
 
   submitChefname(){
-    if (this.chefnameForm.invalid) return;
+    if (this.signUpForm.controls.chefname.invalid) return;
 
-    const { chefname } = this.chefnameForm.value;
+    const chefname = this.signUpForm.controls.chefname.value;
     const unkownError = undefined;
 
     this._authService.chooseChefname(chefname)
