@@ -1,14 +1,13 @@
 import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormGroup, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
 import { MatStepper, MatStepperModule } from '@angular/material/stepper';
-import { Observable, catchError, first, of } from 'rxjs';
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { first, tap } from 'rxjs';
 
 @Component({
   selector: 'app-sign-up',
@@ -80,26 +79,16 @@ export class SignUpComponent implements OnInit {
     if (this.signUpForm.controls.chefname.invalid) return;
 
     const chefname = this.signUpForm.controls.chefname.value;
-    const unkownError = undefined;
 
     this._authService.chooseChefname(chefname)
     .pipe(
-      catchError((err: HttpErrorResponse, caught: Observable<any>) => {
-        console.error(err.message, err);
-        return of(unkownError);
-      })
-    ).subscribe((response: HttpResponse<any> | undefined)=> {
-      console.log(response);
-
-      if (response === unkownError)
-        return;
-
-      if (response.ok) {
-        this._stepper.next();
-      }
-      else {
-        console.log(response.body?.notifications ?? 'Keine Fehler.');
-      }
+      tap({
+        error: (err) => {
+          console.error(err);
+        }
+      }),
+    ).subscribe(() => {
+      this._stepper.next();
     });
   }
 }
