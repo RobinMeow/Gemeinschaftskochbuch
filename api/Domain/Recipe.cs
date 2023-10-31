@@ -7,4 +7,9 @@ public sealed class Recipe : Entity
     public override int ModelVersion { get; init; } = MODEL_VERSION;
 
     public required string Name { get; set; }
+
+    public Recipe(EntityId entityId)
+    : base(entityId)
+    {
+    }
 }

@@ -5,7 +5,6 @@ import { Recipe } from './add-recipe/Recipe';
 import { HandleError, HttpErrorHandler } from './http-error-handler.service';
 import { NewRecipe } from './add-recipe/NewRecipe';
 import { API_BASE_URI } from './app.tokens';
-import { FRONTEND_ORIGINS } from './app.tokens';
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +18,6 @@ export class RecipeService {
 
   constructor(
     @Inject(API_BASE_URI) apiBaseUri: string,
-    @Inject(FRONTEND_ORIGINS) frontendOrigins: string[],
     private _httpClient: HttpClient,
     httpErrorHandler: HttpErrorHandler
     ) {
@@ -28,7 +26,6 @@ export class RecipeService {
     this._httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': frontendOrigins.join(','),
       })
     };
     this._handleError = httpErrorHandler.createHandleError('RecipeService');

@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace api.Domain;
 
-public struct IsoDateTime
+public sealed class IsoDateTime
 {
     static readonly CultureInfo InvariantCulture = CultureInfo.InvariantCulture; // cache for performance
 
@@ -21,6 +21,10 @@ public struct IsoDateTime
     };
 
     DateTime _dateTime = DateTime.SpecifyKind(DateTime.MinValue, DateTimeKind.Utc);
+
+    private IsoDateTime()
+    {
+    }
 
     public static IsoDateTime Now {
         get{

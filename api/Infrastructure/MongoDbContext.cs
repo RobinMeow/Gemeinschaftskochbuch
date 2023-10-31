@@ -10,6 +10,8 @@ public sealed class MongoDbContext : DbContext
 {
     public override IRecipeRepository RecipeRepository { get; init; }
 
+    public override IChefRepository ChefRepository { get; init; }
+
     public MongoDbContext(IOptions<PersistenceSettings> persistenceSettings)
     : base()
     {
@@ -25,7 +27,12 @@ public sealed class MongoDbContext : DbContext
             BsonClassMap.RegisterClassMap<Entity>(x => {
                 x.AutoMap();
                 x.MapMember(entity => entity.ModelVersion).SetElementName("__v");
-                x.MapMember(x => x.Id).SetElementName("_id").SetSerializer(new EntityIdSerializer());
+                x.MapMember(entity => entity.Id).SetElementName("_id").SetSerializer(new EntityIdSerializer());
+            });
+
+            BsonClassMap.RegisterClassMap<Chef>(x => {
+                x.SetDiscriminator(nameof(Entity));
+                x.AutoMap();
             });
 
             BsonClassMap.RegisterClassMap<Recipe>(x => {
@@ -43,6 +50,7 @@ public sealed class MongoDbContext : DbContext
         IMongoDatabase db = client.GetDatabase(databaseName);
 
         RecipeRepository = new RecipeMongoDbCollection(db);
+        ChefRepository = new ChefMongoDbCollection(db);
     }
 }
 

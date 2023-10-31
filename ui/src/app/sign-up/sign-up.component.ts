@@ -1,12 +1,13 @@
-import { Component } from '@angular/core';
+import {Component, OnInit, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '../auth.service';
-import { PasswordComponent } from '../password/password.component';
 import { Router } from '@angular/router';
+import { MatStepper, MatStepperModule } from '@angular/material/stepper';
+import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-sign-up',
@@ -17,39 +18,48 @@ import { Router } from '@angular/router';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    PasswordComponent
+    MatStepperModule
   ],
   templateUrl: './sign-up.component.html',
   styleUrls: ['./sign-up.component.scss']
 })
-export class SignUpComponent {
-  form: FormGroup;
+export class SignUpComponent implements OnInit {
+  private readonly _authService = inject(AuthService);
+  private readonly _router = inject(Router);
+  private readonly _nnfb = inject(NonNullableFormBuilder);
 
-  constructor(
-    private _authService: AuthService,
-    formBuilder: FormBuilder,
-    private _router: Router
-  ) {
-    this.form = formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
-    });
+  protected readonly signUpForm = this._nnfb.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, Validators.minLength(6)]],
+    chefname: [ '', [Validators.required, Validators.minLength(3), Validators.maxLength(20)] ],
+  });
+
+  @ViewChild('stepper') private _stepper!: MatStepper;
+
+  ngOnInit(): void {
+    if (this._authService.isAuthenticated()) {
+      this._router.navigateByUrl('');
+      return;
+    }
   }
 
   async signup() {
     try {
-      if (this.form.invalid) return;
+      if (this.signUpForm.controls.email.invalid || this.signUpForm.controls.password.invalid)
+        return;
 
-      const { email, password } = this.form.value;
+      const email: string = this.signUpForm.controls.email.value;
+      const password: string = this.signUpForm.controls.password.value;
 
       await this._authService.signup(email, password)
       .then(() => {
-        this._router.navigateByUrl('');
+        this._stepper.next();
       })
       .catch(err => {
         const errMsg: string = JSON.stringify(err);
-        const emailAlreadyInUse: boolean = errMsg.indexOf('auth/email-already-in-use') != -1;
+        const isEmailAlreadyInUse: boolean = errMsg.indexOf('auth/email-already-in-use') != -1; // ToDo: Use Async Validator instead
 
-        if (emailAlreadyInUse) {
+        if (isEmailAlreadyInUse) {
           console.warn('Email existiert bereits.');
         }
         else {
@@ -60,5 +70,22 @@ export class SignUpComponent {
     catch (error) {
       console.error(error);
     }
+  }
+
+  protected submitChefname(){
+    if (this.signUpForm.controls.chefname.invalid) return;
+
+    const chefname = this.signUpForm.controls.chefname.value;
+
+    this._authService.chooseChefname(chefname)
+    .pipe(
+      tap({
+        error: (err) => {
+          console.error(err);
+        }
+      }),
+    ).subscribe(() => {
+      this._router.navigateByUrl('');
+    });
   }
 }

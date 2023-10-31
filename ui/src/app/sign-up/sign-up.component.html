@@ -1,16 +1,48 @@
-<form [formGroup]="form" (ngSubmit)="signup()">
+<div class="signup-wrapper">
+	<form [formGroup]="signUpForm">
+		<mat-vertical-stepper [linear]="false" animationDuration="1000" #stepper>
+			<!-- ToDo: You can skip a step. You can spam click. -->
+			<!-- Email, Password -->
+			<mat-step [stepControl]="signUpForm.controls.email || signUpForm.controls.password">
+				<ng-template matStepLabel>Account erstellen</ng-template>
 
-    <mat-form-field>
-        <input matInput formControlName="email" placeholder="Email">
-        <mat-error *ngIf="form.get('email')?.hasError('required')">Email is required</mat-error>
-        <mat-error *ngIf="form.get('email')?.hasError('email')">Invalid email format</mat-error>
-    </mat-form-field>
 
-    <br>
+					<mat-form-field>
+						<input matInput formControlName="email" placeholder="Email" required>
+						<mat-error *ngIf="signUpForm.controls.email.hasError('required')">Pflichtfeld</mat-error>
+						<mat-error *ngIf="signUpForm.controls.email.hasError('email')">Ungültiges format</mat-error>
+					</mat-form-field>
+					<br>
 
-    <app-password [authForm]="form"></app-password>
+					<mat-form-field>
+						<input matInput [formControl]="signUpForm.controls.password" type="password" required>
+						<mat-error *ngIf="signUpForm.controls.password.hasError('required')">Pflichtfeld</mat-error>
+						<mat-error *ngIf="signUpForm.controls.password.hasError('minlength')">Mind. 6 Zeichen</mat-error>
+					</mat-form-field>
+					<br>
 
-    <br>
+					<button mat-raised-button
+						color="primary"
+						type="submit"
+						(click)="signup()"
+						[disabled]="signUpForm.controls.email.invalid || signUpForm.controls.password.invalid">Registrieren</button>
+			</mat-step>
 
-    <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">Registrieren</button>
-</form>
+			<!-- Name -->
+			<mat-step [stepControl]="signUpForm.controls.chefname">
+				<ng-template matStepLabel>Koch - Nickname</ng-template>
+
+				<mat-form-field>
+					<input matInput [formControl]="signUpForm.controls.chefname" placeholder="Chefkoch" required>
+					<mat-error *ngIf="signUpForm.controls.chefname.hasError('required')">Pflichtfeld</mat-error>
+					<mat-error *ngIf="signUpForm.controls.chefname.hasError('minlength')">mind. 3 Zeichen</mat-error>
+					<mat-error *ngIf="signUpForm.controls.chefname.hasError('maxlength')">max. 20 Zeichen</mat-error>
+				</mat-form-field>
+				<br>
+
+				<button mat-raised-button (click)="submitChefname()" [disabled]="signUpForm.controls.chefname.invalid">Abschlie&szlig;en</button>
+			</mat-step>
+
+		</mat-vertical-stepper>
+	</form>
+</div>

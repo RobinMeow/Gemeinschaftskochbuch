@@ -11,7 +11,7 @@ public sealed class New
 
         Assert.NotNull(entityId.Id);
         Assert.False(String.IsNullOrWhiteSpace(entityId.Id));
-        Assert.True(EntityId.IsValidGuidFormat(entityId.Id));
-        Assert.False(EntityId.IsDisallowedId(entityId.Id));
+        Assert.True(GuidEntityIdSpecification.IsValidGuidFormat(entityId.Id));
+        Assert.False(GuidEntityIdSpecification.IsDisallowedId(entityId.Id));
     }
 }
