@@ -7,8 +7,8 @@ public sealed class IsDisallowedId
     [Fact]
     public void returns_true_for_disallowed_ids()
     {
-        Parallel.ForEach(EntityId.DisallowedIds, (disallowedId) => {
-            Assert.True(EntityId.IsDisallowedId(disallowedId));
+        Parallel.ForEach(GuidEntityIdSpecification.DisallowedIds, (disallowedId) => {
+            Assert.True(GuidEntityIdSpecification.IsDisallowedId(disallowedId));
         });
     }
 
@@ -17,7 +17,7 @@ public sealed class IsDisallowedId
     {
         string validId = "12345678-1234-1234-1234-123456789abc";
 
-        bool isDisallowed = EntityId.IsDisallowedId(validId);
+        bool isDisallowed = GuidEntityIdSpecification.IsDisallowedId(validId);
 
         Assert.False(isDisallowed);
     }

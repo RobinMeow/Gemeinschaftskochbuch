@@ -1,25 +1,35 @@
-import { Injectable, OnDestroy } from '@angular/core';
-import { Auth, User, UserCredential, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, user } from '@angular/fire/auth';
+import { Injectable, OnDestroy, inject } from '@angular/core';
+import { Auth, User, UserCredential, browserLocalPersistence, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, user } from '@angular/fire/auth';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { API_BASE_URI } from './app.tokens';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService implements OnDestroy {
+  private readonly _auth = inject(Auth); /* _auth is stateful and carries all data, for example, whether or not, a user is currently logged in. */
+  private readonly _apiBaseUri: string = inject(API_BASE_URI);
+  private readonly _httpClient = inject(HttpClient);
 
   private _user$: Observable<User | null> = user(this._auth);
-  private _onAuthStateChangd: Subscription;
-  private _isAuthenticated = new BehaviorSubject(false);
+  private readonly _onAuthStateChanged: Subscription;
+
+  private _isAuthenticated = new BehaviorSubject(this.isAuthenticated());
 
   get isAuthenticated$(): Observable<boolean> {
     return this._isAuthenticated.asObservable();
   }
 
-  constructor(
-    private _auth: Auth /* _auth is stateful and carries all data, for example, whether or not, a user is currently logged in. */
-  )
-  {
-    this._onAuthStateChangd = this._user$.subscribe((currentUser: User | null) => {
+  constructor() {
+    this._auth.setPersistence(browserLocalPersistence);
+
+    this._auth.onIdTokenChanged(async (user) => {
+      const token =  await user?.getIdTokenResult();
+      localStorage.setItem("TokenExpirationDate", JSON.stringify(token?.expirationTime ?? 0));
+    });
+
+    this._onAuthStateChanged = this._user$.subscribe((currentUser: User | null) => {
       this._isAuthenticated.next(currentUser != null);
     });
   }
@@ -27,6 +37,19 @@ export class AuthService implements OnDestroy {
   // On successful creation of the user account, this user will also be signed in to your application.
   async signup(email: string, password: string): Promise<void> {
     const userCredential: UserCredential = await createUserWithEmailAndPassword(this._auth, email, password);
+  }
+
+  chooseChefname(chefname: string): Observable<any> {
+    const httpOptions: { headers: HttpHeaders; } = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      })
+    };
+
+    // email and uid are read from claim
+    const url = this._apiBaseUri + '/Auth/ChooseChefname?chefname=' + chefname;
+
+    return this._httpClient.post<any>(url, httpOptions);
   }
 
   async signin(email: string, password: string): Promise<void> {
@@ -41,7 +64,13 @@ export class AuthService implements OnDestroy {
     return await this._auth.currentUser?.getIdToken();
   }
 
+  isAuthenticated(): any {
+    const obj: string | null = localStorage.getItem("TokenExpirationDate");
+    const date = obj !== null ? new Date(obj) : new Date(0);
+    return date.getTime() > Date.now();
+  }
+
   ngOnDestroy(): void {
-    this._onAuthStateChangd.unsubscribe();
+    this._onAuthStateChanged.unsubscribe();
   }
 }

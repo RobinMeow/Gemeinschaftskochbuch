@@ -8,7 +8,7 @@ public sealed class IsValidGuidFormat : _testData
     [MemberData(nameof(GetAnyIdWithCorrectFormat))]
     public void returns_true_for_ids_with_valid_format(string validId)
     {
-        bool isValid = EntityId.IsValidGuidFormat(validId);
+        bool isValid = GuidEntityIdSpecification.IsValidGuidFormat(validId);
 
         Assert.True(isValid);
     }
@@ -27,7 +27,7 @@ public sealed class IsValidGuidFormat : _testData
     [MemberData(nameof(GetInvalidIds))]
     public void returns_false_for_ids_with_valid_format_but_invalid_hex_digits(string validId)
     {
-        bool isValid = EntityId.IsValidGuidFormat(validId);
+        bool isValid = GuidEntityIdSpecification.IsValidGuidFormat(validId);
 
         Assert.False(isValid);
     }
@@ -36,7 +36,7 @@ public sealed class IsValidGuidFormat : _testData
     [MemberData(nameof(GetIdsWithInvalidFormat))]
     public void returns_false_for_ids_with_invalid_format(string id)
     {
-        bool isValid = EntityId.IsValidGuidFormat(id);
+        bool isValid = GuidEntityIdSpecification.IsValidGuidFormat(id);
 
         Assert.False(isValid);
     }

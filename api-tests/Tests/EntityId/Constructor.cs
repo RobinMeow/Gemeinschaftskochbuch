@@ -8,23 +8,23 @@ public sealed class Constructor : _testData
     [InlineData(null)]
     [InlineData("")]
     [InlineData(" ")]
-    public void throws_ArgumentNullException_on_NullOrWhiteSpace_id(string id)
+    public void throws_ArgumentException_on_NullOrWhiteSpace_id(string id)
     {
-        Assert.Throws<ArgumentNullException>(() => new EntityId(id));
+        Assert.Throws<ArgumentException>(() => new EntityId(id));
     }
 
     [Theory]
     [MemberData(nameof(GetDisallowedIds))]
-    public void throws_ArgumentException_on_disallowed_id(string disallowedId)
+    public void detects_disallowed_ids(string disallowedId)
     {
-        Assert.Throws<ArgumentException>(() => new EntityId(disallowedId));
+        Assert.True(GuidEntityIdSpecification.IsDisallowedId(disallowedId));
     }
 
     [Theory]
     [MemberData(nameof(GetInvalidIds))]
-    public void throws_ArgumentException_on_invalid_id(string invalidId)
+    public void detects_invalid_id(string invalidId)
     {
-        Assert.Throws<ArgumentException>(() => new EntityId(invalidId));
+        Assert.False(GuidEntityIdSpecification.IsValidGuidFormat(invalidId));
     }
 
     [Fact]

@@ -1,16 +1,20 @@
-<form [formGroup]="form" (ngSubmit)="login()">
+<form [formGroup]="signInForm" (ngSubmit)="login()">
 
     <mat-form-field>
         <input matInput formControlName="email" placeholder="Email">
-        <mat-error *ngIf="form.get('email')?.hasError('required')">Email is required</mat-error>
-        <mat-error *ngIf="form.get('email')?.hasError('email')">Invalid email format</mat-error>
+        <mat-error *ngIf="signInForm.controls.email.hasError('required')">Email is required</mat-error>
+        <mat-error *ngIf="signInForm.controls.email.hasError('email')">Invalid email format</mat-error>
     </mat-form-field>
 
     <br>
 
-    <app-password [authForm]="form"></app-password>
+    <mat-form-field>
+        <input matInput [formControl]="signInForm.controls.password" type="password" required>
+        <mat-error *ngIf="signInForm.controls.password.hasError('required')">Pflichtfeld</mat-error>
+        <mat-error *ngIf="signInForm.controls.password.hasError('minlength')">Mind. 6 Zeichen</mat-error>
+    </mat-form-field>
 
     <br>
 
-    <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">Einloggen</button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="signInForm.invalid">Einloggen</button>
 </form>

@@ -3,6 +3,7 @@ using FirebaseAdmin;
 using FirebaseAdmin.Auth;
 using System.Threading.Tasks;
 using api.Domain;
+using System;
 
 namespace api.Infrastructure;
 
@@ -25,7 +26,8 @@ public sealed class FirebaseAuthService : IAuthService
     {
         // What the VerifyIdTokenAsync ensures: https://firebase.google.com/docs/auth/admin/verify-id-tokens#c
         FirebaseToken firebaseToken = await _firebaseAuth.VerifyIdTokenAsync(idtoken);
-        var verifiedToken = new VerifiedToken(firebaseToken.Claims);
+        DateTime expirationDate = DateTime.UnixEpoch.AddSeconds(firebaseToken.ExpirationTimeSeconds);
+        var verifiedToken = new VerifiedToken(firebaseToken.Claims, expirationDate);
         return verifiedToken;
     }
 }
