@@ -35,20 +35,12 @@
 				<mat-form-field>
 					<input matInput [formControl]="signUpForm.controls.chefname" placeholder="Chefkoch" required>
 					<mat-error *ngIf="signUpForm.controls.chefname.hasError('required')">Pflichtfeld</mat-error>
-					<mat-error *ngIf="signUpForm.controls.chefname.hasError('maxLength')">max. 20 Zeichen</mat-error>
-					<mat-error *ngIf="signUpForm.controls.chefname.hasError('minLength')">mind. 3 Zeichen</mat-error>
+					<mat-error *ngIf="signUpForm.controls.chefname.hasError('minlength')">mind. 3 Zeichen</mat-error>
+					<mat-error *ngIf="signUpForm.controls.chefname.hasError('maxlength')">max. 20 Zeichen</mat-error>
 				</mat-form-field>
+				<br>
 
 				<button mat-raised-button (click)="submitChefname()" [disabled]="signUpForm.controls.chefname.invalid">Weiter</button>
-			</mat-step>
-
-			<!-- Email Bestätigen -->
-			<mat-step>
-				<ng-template matStepLabel>Email Bestätigung</ng-template>
-				Bitte bestätige deine Email innerhalb von 7 Tagen.
-				<div>
-					<button mat-button>Finish (Not yet impl)</button>
-				</div>
 			</mat-step>
 
 		</mat-vertical-stepper>
