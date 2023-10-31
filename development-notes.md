@@ -2,7 +2,11 @@
 
 To start the Back and Front End, you can use the VSCode Run Task `Run Back + Front End`.
 
-It will `ng serve` the `ui` (Angular) app and `dotnet run` the `webapi` app.
+Or do it manually:
+
+1. `cd ui` > `npm run fireauth-emu`
+2. `cd api` > `dotnet run`
+3. `cd ui` > `ng serve`
 
 ## MongoDB Local
 
