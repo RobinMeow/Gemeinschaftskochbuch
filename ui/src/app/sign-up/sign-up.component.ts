@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, inject } from '@angular/core';
+import {Component, OnInit, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -7,7 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
 import { MatStepper, MatStepperModule } from '@angular/material/stepper';
-import { first, tap } from 'rxjs';
+import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-sign-up',
@@ -28,7 +28,6 @@ export class SignUpComponent implements OnInit {
   private readonly _router = inject(Router);
   private readonly _nnfb = inject(NonNullableFormBuilder);
 
-
   protected readonly signUpForm = this._nnfb.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
@@ -38,12 +37,10 @@ export class SignUpComponent implements OnInit {
   @ViewChild('stepper') private _stepper!: MatStepper;
 
   ngOnInit(): void {
-    this._authService.isAuthenticated$.pipe(first()).subscribe((isAuthed) => {
-      if (isAuthed) {
-        this._router.navigateByUrl('');
-        return;
-      }
-    });
+    if (this._authService.isAuthenticated()) {
+      this._router.navigateByUrl('');
+      return;
+    }
   }
 
   async signup() {
@@ -75,7 +72,7 @@ export class SignUpComponent implements OnInit {
     }
   }
 
-  submitChefname(){
+  protected submitChefname(){
     if (this.signUpForm.controls.chefname.invalid) return;
 
     const chefname = this.signUpForm.controls.chefname.value;
@@ -88,7 +85,7 @@ export class SignUpComponent implements OnInit {
         }
       }),
     ).subscribe(() => {
-      this._stepper.next();
+      this._router.navigateByUrl('');
     });
   }
 }

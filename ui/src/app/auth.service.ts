@@ -1,5 +1,5 @@
-import { Inject, Injectable, OnDestroy } from '@angular/core';
-import { Auth, User, UserCredential, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, user } from '@angular/fire/auth';
+import { Injectable, OnDestroy, inject } from '@angular/core';
+import { Auth, User, UserCredential, browserLocalPersistence, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, user } from '@angular/fire/auth';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { API_BASE_URI } from './app.tokens';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -8,21 +8,27 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
   providedIn: 'root'
 })
 export class AuthService implements OnDestroy {
+  private readonly _auth = inject(Auth); /* _auth is stateful and carries all data, for example, whether or not, a user is currently logged in. */
+  private readonly _apiBaseUri: string = inject(API_BASE_URI);
+  private readonly _httpClient = inject(HttpClient);
 
   private _user$: Observable<User | null> = user(this._auth);
-  private _onAuthStateChanged: Subscription;
-  private _isAuthenticated = new BehaviorSubject(false);
+  private readonly _onAuthStateChanged: Subscription;
+
+  private _isAuthenticated = new BehaviorSubject(this.isAuthenticated());
 
   get isAuthenticated$(): Observable<boolean> {
     return this._isAuthenticated.asObservable();
   }
 
-  constructor(
-    private _auth: Auth, /* _auth is stateful and carries all data, for example, whether or not, a user is currently logged in. */
-    @Inject(API_BASE_URI) private _apiBaseUri: string,
-    private _httpClient: HttpClient,
-  )
-  {
+  constructor() {
+    this._auth.setPersistence(browserLocalPersistence);
+
+    this._auth.onIdTokenChanged(async (user) => {
+      const token =  await user?.getIdTokenResult();
+      localStorage.setItem("TokenExpirationDate", JSON.stringify(token?.expirationTime ?? 0));
+    });
+
     this._onAuthStateChanged = this._user$.subscribe((currentUser: User | null) => {
       this._isAuthenticated.next(currentUser != null);
     });
@@ -56,6 +62,12 @@ export class AuthService implements OnDestroy {
 
   async tryGetToken(): Promise<string | undefined> {
     return await this._auth.currentUser?.getIdToken();
+  }
+
+  isAuthenticated(): any {
+    const obj: string | null = localStorage.getItem("TokenExpirationDate");
+    const date = obj !== null ? new Date(obj) : new Date(0);
+    return date.getTime() > Date.now();
   }
 
   ngOnDestroy(): void {
